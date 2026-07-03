@@ -1,0 +1,31 @@
+# OPTIONAL overlay for putting UnDeadJournal on the public internet behind
+# Caddy with automatic HTTPS and a site-wide password. Read README.md
+# ("Putting it on a server") first — public exposure of this old codebase is
+# discouraged; the password wall is the mitigation.
+#
+# Usage:
+#   cp caddy/Caddyfile.example caddy/Caddyfile     # then edit domain + password
+#   docker compose -f docker-compose.yml -f docker-compose.public.yml up -d
+#
+# Note: with this overlay the web port stays internal; only Caddy is published.
+
+services:
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - web
+
+  web:
+    ports: !override []   # unpublish the direct HTTP port; Caddy fronts everything
+
+volumes:
+  caddy_data:
+  caddy_config:

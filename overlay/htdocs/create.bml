@@ -1,0 +1,97 @@
+<?page
+title=>Join the ranks of the undead!
+body<=
+<?_code
+{
+    use strict;
+    use vars qw(%POST $title);
+
+    # Already logged in? Nothing to create.
+    my $remote = LJ::get_remote();
+    if ($remote) {
+        return "<?h1 Already risen h1?>" .
+               "<?p You are already haunting DeadJournal as <b>" . LJ::ehtml($remote->user) . "</b>. " .
+               "<a href='/logout.bml'>Leave the crypt</a> first to raise another. p?>";
+    }
+
+    my $ret = "";
+
+    if (LJ::did_post()) {
+        my $u_in = LJ::canonical_username($POST{'user'});
+        my @errs;
+        push @errs, "Choose a username (letters, numbers and underscores only)."
+            unless $u_in;
+        push @errs, "That name already walks among the dead."
+            if $u_in && LJ::load_user($u_in);
+        push @errs, "Enter a password."
+            unless length($POST{'password1'} || '');
+        push @errs, "The two passwords don't match."
+            if ($POST{'password1'} || '') ne ($POST{'password2'} || '');
+        push @errs, "Enter an email address."
+            unless ($POST{'email'} || '') =~ /.\@./;
+
+        unless (@errs) {
+            my $nu = LJ::create_account({
+                user     => $u_in,
+                name     => ($POST{'name'} || $u_in),
+                password => $POST{'password1'},
+                email    => $POST{'email'},
+            });
+            if ($nu) {
+                # Every DeadJournal journal is gothic by default: apply a dark S1
+                # override (dark GLOBAL_HEAD CSS) and enable overrides. The override
+                # text lives in etc/gothic-s1-override.txt rather than inline here,
+                # because BML mangles a CSS heredoc embedded in a .bml file.
+                # eval-guarded so a styling hiccup can never fail account creation.
+                eval {
+                    # Reload a fully-blessed user object: create_account's return
+                    # value doesn't pass LJ::isu(), so save_overrides() would no-op.
+                    my $gu = LJ::load_user($u_in) || $nu;
+                    my $home = $LJ::HOME || $ENV{'LJHOME'} || '/home/lj';
+                    my $ovf = "$home/etc/gothic-s1-override.txt";
+                    if ($gu && open my $fh, '<', $ovf) {
+                        local $/;
+                        my $goth = <$fh>;
+                        close $fh;
+                        if ($goth) {
+                            # ljviews.pl (package LJ::S1) is loaded on demand only
+                            # when a journal renders, so require it here or
+                            # save_overrides() is undefined during signup.
+                            require "$home/cgi-bin/ljviews.pl";
+                            LJ::S1::save_overrides($gu, $goth);
+                            LJ::update_user($gu, { useoverrides => 'Y' });
+                        }
+                    }
+                };
+                return "<?h1 Welcome to the afterlife h1?>" .
+                       "<?p The journal <b>" . LJ::ehtml($u_in) . "</b> has risen. " .
+                       "<a href='/login.bml'>Enter the Crypt</a> to log in, then " .
+                       "<a href='/update.bml'>make your first offering</a>. p?>";
+            }
+            push @errs, "Couldn't raise the account. Try again.";
+        }
+
+        $ret .= "<?errorbar " . join("<br />", map { LJ::ehtml($_) } @errs) . " errorbar?>"
+            if @errs;
+    }
+
+    my $v = sub { LJ::ehtml($POST{$_[0]} || '') };
+
+    $ret .= "<p><font face='Arial,Helvetica, sans-serif' color='#442948'><u><b>Welcome</b></u></font>";
+    $ret .= "<br>To create a new DeadJournal, fill in the form below. Cave to peer pressure and make your own DeadJournal!<br>";
+    $ret .= "<form method='post' action='/create.bml'>";
+    $ret .= LJ::form_auth();
+    $ret .= "<table cellpadding='4'>";
+    $ret .= "<tr><td align='right'><b>Username:</b></td><td><input name='user' size='20' maxlength='25' value='" . $v->('user') . "' /></td></tr>";
+    $ret .= "<tr><td align='right'><b>Display name:</b></td><td><input name='name' size='30' maxlength='80' value='" . $v->('name') . "' /></td></tr>";
+    $ret .= "<tr><td align='right'><b>Password:</b></td><td><input type='password' name='password1' size='20' /></td></tr>";
+    $ret .= "<tr><td align='right'><b>Confirm password:</b></td><td><input type='password' name='password2' size='20' /></td></tr>";
+    $ret .= "<tr><td align='right'><b>Email:</b></td><td><input name='email' size='30' maxlength='80' value='" . $v->('email') . "' /></td></tr>";
+    $ret .= "<tr><td></td><td><input type='submit' value='Proceed...' /></td></tr>";
+    $ret .= "</table></form>";
+
+    return $ret;
+}
+_code?>
+<=body
+page?>

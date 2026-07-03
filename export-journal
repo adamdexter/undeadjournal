@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Export your entries from deadjournal.com (or another classic LiveJournal site).
+# Interactive — just run it:  ./export-journal
+exec python3 "$(dirname "$0")/import/fetch_deadjournal.py" "$@"

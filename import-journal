@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Import your exported entries into YOUR local site. Interactive — just run it:
+#   ./import-journal            (imports everything, oldest first)
+#   ./import-journal --dry-run  (preview only)
+exec python3 "$(dirname "$0")/import/load_local.py" "$@"

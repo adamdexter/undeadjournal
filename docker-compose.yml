@@ -1,0 +1,79 @@
+# UnDeadJournal — an authentic classic DeadJournal/LiveJournal, in Docker.
+#
+# Three services: web (Apache2 + mod_perl2 + the LJ Perl tree), db (MariaDB 10.6
+# forced into the latin1 / permissive-sql_mode environment the old code needs),
+# and memcached. Only the web HTTP port is published — the DB is never exposed.
+#
+# Easiest start: run ./setup.sh (it writes .env and does everything for you).
+#
+# SECURITY: this runs ~20-year-old Perl on purpose. Keep it private (localhost,
+# home LAN, or a VPN like Tailscale). Do NOT port-forward it to the internet.
+# See README.md ("Putting it on a server") before any public deployment.
+
+services:
+  db:
+    image: mariadb:10.6
+    restart: unless-stopped
+    # The LJ schema stores raw UTF-8 bytes in latin1 columns and sets no sql_mode
+    # on connect, so the SERVER must be latin1 + permissive. MySQL 8 would break it.
+    command: >
+      --character-set-server=latin1
+      --collation-server=latin1_swedish_ci
+      --skip-character-set-client-handshake
+      --sql-mode=
+      --default-storage-engine=InnoDB
+      --max-allowed-packet=256M
+      --innodb-log-file-size=128M
+      --net-read-timeout=600
+      --net-write-timeout=600
+      --wait-timeout=28800
+      --interactive-timeout=28800
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpass}
+      MARIADB_DATABASE: livejournal
+      MARIADB_USER: lj
+      MARIADB_PASSWORD: ${DB_PASSWORD:-ljpass}
+    volumes:
+      - dj_db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    # No ports: the database is intentionally unreachable from the host/network.
+
+  memcached:
+    image: memcached:1.6
+    restart: unless-stopped
+    command: ["-m", "512"]
+
+  web:
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      memcached:
+        condition: service_started
+    environment:
+      # How the site is reached in the browser (host:port and full URL).
+      # ./setup.sh fills these in for you via .env.
+      LJ_DOMAIN: ${LJ_DOMAIN:-localhost:8080}
+      LJ_SITEROOT: ${LJ_SITEROOT:-http://localhost:8080}
+      LJ_SERVERNAME: ${LJ_SERVERNAME:-localhost}
+      # Site branding (shows in page titles and site text).
+      SITE_NAME: ${SITE_NAME:-DeadJournal}
+      # Site chrome: "deadjournal" needs the authentic artwork (fetched by
+      # scripts/fetch-authentic-skin.sh); "bluewhite" is the stock LJ look.
+      LJ_SCHEME: ${LJ_SCHEME:-deadjournal}
+      # Password set on the built-in 'system' admin account during first-run bootstrap.
+      SYSTEM_PASSWORD: ${SYSTEM_PASSWORD:-changeme-system-pass}
+      DB_PASSWORD: ${DB_PASSWORD:-ljpass}
+    ports:
+      # BIND_ADDR=127.0.0.1 → this computer only; 0.0.0.0 → reachable on your network.
+      - "${BIND_ADDR:-127.0.0.1}:${HTTP_PORT:-8080}:80"
+
+volumes:
+  dj_db:

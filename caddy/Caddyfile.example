@@ -1,0 +1,21 @@
+# Caddyfile for public UnDeadJournal deployment (HTTPS + site-wide password).
+#
+# 1. Point your domain's DNS at this server.
+# 2. Replace journal.example.com below with your domain.
+# 3. Generate a password hash:
+#      docker run --rm caddy:2 caddy hash-password --plaintext 'YOUR-GATE-PASSWORD'
+#    and paste it below (keep the username you want, e.g. "crypt").
+# 4. cp caddy/Caddyfile.example caddy/Caddyfile   (Caddyfile is gitignored-safe to edit)
+# 5. docker compose -f docker-compose.yml -f docker-compose.public.yml up -d
+#
+# Everyone gets a browser password prompt BEFORE reaching the journal at all —
+# that gate is what makes public hosting of this old codebase tolerable.
+# IMPORTANT: also set LJ_SITEROOT=https://journal.example.com (no port) and
+# LJ_DOMAIN=journal.example.com in .env so the site generates correct links.
+
+journal.example.com {
+	basic_auth {
+		crypt $2a$14$REPLACE-WITH-YOUR-HASH
+	}
+	reverse_proxy web:80
+}

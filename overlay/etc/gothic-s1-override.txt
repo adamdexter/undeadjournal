@@ -1,0 +1,21 @@
+PAGE_BGCOLOR=>#0b0a10
+PAGE_TEXT=>#c2bcd0
+PAGE_LINK=>#9b7fc7
+PAGE_VLINK=>#7a5fa7
+PAGE_ALINK=>#cc99ff
+GLOBAL_HEAD<=
+<style type="text/css">
+body{background:#0b0a10 !important;color:#c2bcd0 !important;font-family:Verdana,Arial,Helvetica,sans-serif;font-size:11px;line-height:15px;}
+a,a:link,a:visited{color:#9b7fc7 !important;text-decoration:none;}
+a:hover{color:#cc99ff !important;text-decoration:underline;}
+table,tr,td,th{background-color:transparent !important;color:#c2bcd0 !important;}
+.shadowed,.entrybox{background:#15121f !important;border:1px solid #2e2545 !important;}
+.subject{color:#c9b6f0 !important;font-weight:bold;}
+.meta,.caption,.index,.comments,.ljtaglist{color:#8a7aa8 !important;}
+.ljuser b{color:#b9a3e3 !important;}
+.ljtags{color:#8a7aa8 !important;}
+hr{border:0 !important;border-top:1px solid #2e2545 !important;}
+img{border:0;}
+input,textarea,select{background:#15121f !important;color:#c2bcd0 !important;border:1px solid #2e2545 !important;}
+</style>
+<=GLOBAL_HEAD

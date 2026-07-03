@@ -1,0 +1,77 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Editors / IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Node
+node_modules/
+dist/
+build/
+.next/
+.cache/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Build / temp
+tmp/
+temp/
+*.tmp
+
+# --- undeadjournal ---
+# Local working clone of the LiveJournal source (re-cloned at Docker build time).
+# Anchored to repo root with a leading slash: a bare "lj/" ALSO matches
+# overlay/cgi-bin/LJ/ on case-insensitive filesystems (macOS), which silently
+# dropped all 27 harvested LJ/* stubs from git and broke the build on clone.
+/lj/
+# Your exported journal entries (private; never commit your journal).
+import/data/
+# Local compose overrides
+docker-compose.override.yml
+# Database backups
+backups/
+
+# Authentic DeadJournal artwork — downloaded from the Internet Archive by
+# scripts/fetch-authentic-skin.sh at install time. This art is copyrighted
+# (DeadJournal/mindvamp; mood icons by their DW artists) and must NEVER be
+# committed to this repository. See PROVENANCE.md.
+overlay/htdocs/img/deadjournal_*.jpg
+overlay/htdocs/img/dj_*.jpg
+overlay/htdocs/img/miniskull.gif
+overlay/htdocs/img/userinfo.gif
+overlay/htdocs/img/tomb-small.png
+overlay/htdocs/img/mood/
+overlay/htdocs/favicon.ico
+overlay/htdocs/djstyle.css
+_test_ljhome/
+build.log
+# Your edited Caddyfile (contains your domain + password hash)
+caddy/Caddyfile

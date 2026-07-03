@@ -1,0 +1,25 @@
+name: build
+
+# Build the web image on every push/PR so engine regressions are caught early.
+# (The full stack needs a DB to boot; the image build alone already exercises
+# the source fetch, all compatibility patches, the overlay, and the Perl
+# module check — which is where breakage almost always shows up.)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-web-image:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build web image
+        run: docker build -f web/Dockerfile -t undeadjournal-web .
+      - name: Shell scripts parse
+        run: |
+          bash -n setup.sh backup.sh restore.sh scripts/fetch-authentic-skin.sh
+          python3 -m py_compile import/fetch_deadjournal.py import/load_local.py

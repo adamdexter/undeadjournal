@@ -1,0 +1,99 @@
+#
+# DeadJournal site scheme — faithful to the 2006-04-04 Wayback capture of
+# www.deadjournal.com (the classic 2003-2006 chrome). Inherits inner BML blocks
+# from global.look; overrides PAGE so every site page gets the authentic frame:
+#
+#   - centered 800px table on black, exact original BODY colors
+#   - header band 245/30/250/30/245 (bone ends, tiling purple bar, skull center)
+#   - "MAIN NESTOID" middle: 20px bone gutters | left sidebar nav | content
+#   - inner text footer (hr #330066, Login/Logout/OpenID, (c)Dead Journal)
+#   - footer band with the mindvamp.com imagemap credit, header logo maps home
+#
+# Faithful deviations: the two tiling cells use WIDTH=30 images (as the current
+# live site does) instead of 2006's overflowing WIDTH=87/70, so the table sums to
+# exactly 800px in modern browsers; sidebar entries whose pages don't exist in
+# this build (Offerings, Download, DJ News, Advertise, Hauntings) are omitted.
+#
+
+_parent=>global.look
+
+PAGE<=
+{Fp}<html>
+<head><title>%%title%%</title>
+<?_code LJ::res_includes() _code?>
+<link href="/djstyle.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+  BODY,TABLE,TR,TD { font-family:arial; font-size:12px; }
+  /* authentic 2006 login-box touch: tombstone icon inside the username field */
+  input[name="user"] { background: #fff url(<?imgprefix?>/tomb-small.png) no-repeat 0px 1px; padding-left: 18px; color: #00C; font-weight: bold; }
+</style>
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+<meta name="description" content="DeadJournal.com ... words words.">
+<meta name="keywords" content="diary,journal">
+%%head%%
+</head>
+<body bgcolor="#000000" marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" link="#200095" vlink="#160066" alink="#171918" text="#201b2f" %%bodyopts%%><center>
+<table border="0" cellpadding="0" cellspacing="0" width="800">
+	<tr align="right">
+		<td width="245" background="<?imgprefix?>/deadjournal_header_02.jpg" align="left"><img src="<?imgprefix?>/deadjournal_header_01.jpg" width="245" height="155" alt="Dead Journal" border="0"></td>
+		<td width="30" background="<?imgprefix?>/deadjournal_header_02.jpg"><img src="<?imgprefix?>/deadjournal_header_02.jpg" width="30" height="155" alt=""></td>
+		<td width="250" background="<?imgprefix?>/deadjournal_header_02.jpg" align="center"><img src="<?imgprefix?>/deadjournal_header_03.jpg" alt="Dead Journal" width="250" height="155" border="0" usemap="#Map2"></td>
+		<td width="30" background="<?imgprefix?>/deadjournal_header_04.jpg"><img src="<?imgprefix?>/deadjournal_header_04.jpg" width="30" height="155" alt=""></td>
+		<td width="245"><img src="<?imgprefix?>/deadjournal_header_05.jpg" width="245" height="155" alt="Dead Journal"></td>
+	</tr>
+	<tr><td colspan="5" background="<?imgprefix?>/dj_midback.jpg">
+<!-- BEGIN MAIN NESTOID -->
+<table cellpadding="0" cellspacing="0" border="0" width="800">
+	<tr>
+		<td width="20" background="<?imgprefix?>/dj_leftback.jpg" align="left"><img src="<?imgprefix?>/dot.gif" width="20" height="1" alt=""></td>
+		<td valign="top" class="bodytext" background="<?imgprefix?>/dj_midback.jpg" width="150">
+<!-- BEGIN LEFT COL -->
+<p><img src="<?imgprefix?>/userinfo.gif" width="10" height="10" hspace="2" align="absmiddle"><a href="/login.bml">Enter&nbsp;the&nbsp;Crypt</a><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/openid/">OpenID</a>
+<p><img src="<?imgprefix?>/userinfo.gif" width="10" height="10" hspace="2" align="absmiddle"><b>The&nbsp;Cemetery</b><br>&nbsp;&nbsp;&nbsp;&nbsp;- <?_code
+    my $uri = eval { BML::get_uri() } || '';
+    return $uri =~ m!^/(index\.bml)?$!
+        ? '<b><span style="background-color: #c6bfb7"><font color="#bd0031">The&nbsp;Morgue</font></span></b>'
+        : '<a href="/">The&nbsp;Morgue</a>';
+_code?><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/create.bml">Join&nbsp;the&nbsp;Undead</a><br>
+<p><img src="<?imgprefix?>/userinfo.gif" width="10" height="10" hspace="2" align="absmiddle"><b>Morgue&nbsp;Directory</b><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/random.bml">Random&nbsp;Grave</a><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/directory.bml">Place&nbsp;of&nbsp;Death</a><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/directorysearch.bml">Search&nbsp;Morgue</a><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/interests.bml">Interests</a><br>
+<p><img src="<?imgprefix?>/userinfo.gif" width="10" height="10" hspace="2" align="absmiddle"><b>Botched&nbsp;Murders</b><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/support/faq.bml">FAQ</a><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/lostinfo.bml">Lost&nbsp;Info?</a><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/support/">Spoon&nbsp;Feeding</a><br>
+<!-- END LEFT COL -->
+		</td>
+		<td width="5" valign="top" align="left"><img src="<?imgprefix?>/dot.gif" width="5" height="1" alt=""></td>
+		<td valign="top" class="bodytext" background="<?imgprefix?>/dj_midback.jpg" width="500">
+<!-- BEGIN RIGHT COL -->
+<?_code
+    return @errors && scalar @errors ? LJ::error_list(@errors) : '';
+_code?>
+%%body%%
+<!-- END RIGHT COL -->
+		</td>
+		<td width="20" background="<?imgprefix?>/dj_rightback.jpg" align="right"><img src="<?imgprefix?>/dot.gif" width="20" height="1" alt=""></td>
+	</tr>
+	<tr>
+		<td width="20" background="<?imgprefix?>/dj_leftback.jpg" align="left"><img src="<?imgprefix?>/dot.gif" width="20" height="1" alt=""></td>
+		<td colspan="3" align="center" background="<?imgprefix?>/dj_midback.jpg" class="djfooter">
+<!-- BEGIN DEAD JOURNAL FOOTER -->
+<hr nohade size="1" color="#330066">
+<a href="/login.bml">Login/Logout</a><a href="/openid/">/OpenID</a>
+<br><br><strong>&copy;<a href="/">Dead Journal</a></strong> - All Rights Reserved.
+<!-- END DEAD JOURNAL FOOTER -->
+		</td>
+		<td width="20" background="<?imgprefix?>/dj_rightback.jpg" align="right"><img src="<?imgprefix?>/dot.gif" width="20" height="1" alt=""></td>
+	</tr>
+</table>
+<!-- END MAIN NESTOID -->
+	</td></tr>
+	<tr>
+		<td width="245" background="<?imgprefix?>/deadjournal_footer_03.jpg" align="left"><img src="<?imgprefix?>/deadjournal_footer_02.jpg" width="245" height="75" border="0" alt=""></td>
+		<td width="30" background="<?imgprefix?>/deadjournal_footer_03.jpg"><img src="<?imgprefix?>/deadjournal_footer_03.jpg" width="30" height="75" alt=""></td>
+		<td width="250" background="<?imgprefix?>/deadjournal_footer_03.jpg" align="center"><img src="<?imgprefix?>/deadjournal_footer_04.jpg" width="250" height="75" border="0" usemap="#Map" alt=""></td>
+		<td width="30" background="<?imgprefix?>/deadjournal_footer_03.jpg"><img src="<?imgprefix?>/deadjournal_footer_05.jpg" width="30" height="75" alt=""></td>
+		<td background="<?imgprefix?>/deadjournal_footer_03.jpg" width="245" align="right"><img src="<?imgprefix?>/deadjournal_footer_06.jpg" width="245" height="75" alt=""></td>
+	</tr>
+</table>
+<map name="Map"><area shape="rect" coords="53,55,200,69" href="http://www.mindvamp.com/" target="_blank" alt="site design: mindvamp"></map>
+<map name="Map2"><area shape="rect" coords="32,11,221,145" href="/" alt="DeadJournal"></map></center>
+</body>
+</html>
+<=PAGE

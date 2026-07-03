@@ -1,0 +1,117 @@
+<?page
+title=>DeadJournal.com
+body<=
+<p><font face="Arial,Helvetica, sans-serif" color="#442948"><u><b>What is this place?</b></u></font>
+<br>This is a journal site (much like LiveJournal), but as you'll quickly see, not
+every journal is sunshine and songbirds.  This is a home for
+the journals nobody else wants to see &mdash; or even host.
+<br><img src="<?imgprefix?>/dot.gif" width="1" vspace="6" height="1"><br>Angry? Good. If you're a pissed off person who hates incompetence, sign up now!
+<br>
+<p><font face="Arial,Helvetica, sans-serif" color="#442948"><u><b>Who journals here?</b></u></font>
+<br>All sorts of people, recording their rants and psychotic thoughts!
+<?_code
+    # live stats, in the spirit of the 2006 homepage counter line
+    my ($users, $entries) = (0, 0);
+    eval {
+        my $dbr = LJ::get_db_reader();
+        if ($dbr) {
+            $users   = $dbr->selectrow_array("SELECT COUNT(*) FROM user") || 0;
+            $entries = $dbr->selectrow_array("SELECT COUNT(*) FROM log2") || 0;
+        }
+    };
+    return " To date, DeadJournal has <u>$users</u> members holding <u>$entries</u> entries, and still growing!" .
+           "  If stats and graphs interest you, check out our <a href=\"stats.bml\">Stats Page</a>.";
+_code?>
+
+<p><font face="Arial,Helvetica, sans-serif" color="#442948"><u><b>How do I use my DeadJournal?</b></u></font>
+<br>Figure it out, you'll be surprised on how easy it is.  If you cant figure it out.. well....
+
+<center><p><a href="create.bml"><font size="+1"><b>Shaddap and gimme a GodDammed Deadjournal!</b></font></a></center>
+
+<p><font face="Arial,Helvetica, sans-serif" color="#442948"><u><b>The Basics</b></u></font>
+<p><div class="choice"><table width="100%" cellpadding="2" cellspacing="5">
+<tr>
+<td valign="top" width="50%">
+<dl>
+<dt><a href="create.bml"><font face="Arial,Helvetica"><b>Create A Journal</b></font></a><dd><font size="2">Cave to peer pressure and make your own DeadJournal!</font>
+</dl>
+</td>
+<td valign="top" width="50%">
+<dl>
+<dt><a href="update.bml"><font face="Arial,Helvetica"><b>Update Journal</b></font></a><dd><font size="2">Update your DeadJournal from the web.</font>
+</dl>
+</td>
+</tr>
+</table></div>
+
+<font face="Arial,Helvetica, sans-serif" color="#442948"><u><b>Journal Administration</b></u></font>
+<p><div class="choice"><table width="100%" cellpadding="2" cellspacing="5">
+<tr>
+<td valign="top" width="50%">
+<dl>
+<dt><a href="/customize/"><font face="Arial,Helvetica"><b>Edit Look/Options</b></font></a><dd><font size="2">Customize your DeadJournal's appearance and options.</font>
+<dt><a href="/manage/profile/"><font face="Arial,Helvetica"><b>Edit Personal Information</b></font></a><dd><font size="2">Edit your personal information and preferences.</font>
+<dt><a href="editjournal.bml"><font face="Arial,Helvetica"><b>Edit Journal Entries</b></font></a><dd><font size="2">Edit or delete journal entries you've made in the past.</font>
+<dt><a href="changepassword.bml"><font face="Arial,Helvetica"><b>Change Password</b></font></a><dd><font size="2">Change your password.</font>
+</dl>
+</td>
+<td valign="top" width="50%">
+<dl>
+<dt><a href="/friends/edit.bml"><font face="Arial,Helvetica"><b>Edit Fiends</b></font></a><dd><font size="2">Edit your list of online DeadJournal fiends to spy on.</font>
+<dt><a href="editpics.bml"><font face="Arial,Helvetica"><b>Edit Pictures</b></font></a><dd><font size="2">Edit your little pictures.</font>
+<dt><a href="/styles/edit.bml"><font face="Arial,Helvetica"><b>Edit Styles</b></font></a><dd><font size="2">Edit your styles.</font>
+<dt><a href="export.bml"><font face="Arial,Helvetica"><b>Export your Journal</b></font></a><dd><font size="2">Paranoid? Then keep a backup of your journal!.</font>
+</dl>
+</td>
+</tr>
+</table></div>
+
+<font face="Arial,Helvetica, sans-serif" color="#442948"><u><b>Deadunities! (communities)</b></u></font>
+<p><div class="choice"><table width="100%" cellpadding="2" cellspacing="5">
+<tr>
+<td valign="top" width="50%">
+<dl>
+<dt><a href="community/"><font face="Arial,Helvetica"><b>Deadunity (community) access</b></font></a><dd><font size="2">Go to deadunity central!</font>
+</dl>
+</td>
+<td valign="top" width="50%">
+<dl>
+</dl>
+</td>
+</tr>
+</table></div>
+
+<font face="Arial,Helvetica, sans-serif" color="#442948"><u><b>Search Pages</b></u></font>
+<p><div class="choice"><table width="100%" cellpadding="2" cellspacing="5">
+<tr>
+<td valign="top" width="50%">
+<dl>
+<dt><a href="interests.bml"><font face="Arial,Helvetica"><b>Page-O-Interests</b></font></a><dd><font size="2">Look to see who else likes/hates the same stuff you do!</font>
+<dt><a href="random.bml"><font face="Arial,Helvetica"><b>Randomness</b></font></a><dd><font size="2">Go to a random DeadJournal!</font>
+</dl>
+</td>
+<td valign="top" width="50%">
+<dl>
+<dt><a href="directorysearch.bml"><font face="Arial,Helvetica"><b>User Search</b></font></a><dd><font size="2">Search for a person on DeadJournal</font>
+</dl>
+</td>
+</tr>
+</table></div>
+
+<font face="Arial,Helvetica, sans-serif" color="#442948"><u><b>Other Shiznit</b></u></font><br>
+<p><div class="choice"><table width="100%" cellpadding="2" cellspacing="5">
+<tr>
+<td valign="top" width="50%">
+<dl>
+<dt><a href="stats.bml"><font face="Arial,Helvetica"><b>Stats Page</b></font></a><dd><font size="2">See how much we are really hated.</font>
+</dl>
+</td>
+<td valign="top" width="50%">
+<dl>
+<dt><a href="/support/"><font face="Arial,Helvetica"><b>Spoon Feeding (Support)</b></font></a><dd><font size="2">Open a ticket for personal support attention.</font>
+</dl>
+</td>
+</tr>
+</table></div>
+<=body
+page?>
