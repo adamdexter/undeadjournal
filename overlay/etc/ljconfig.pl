@@ -132,9 +132,11 @@
     ### resolves to cgi-bin/bml/scheme/deadjournal.look (the Dockerfile also sets
     ### it as the BML DefaultScheme).
     @SCHEMES = (
-        { scheme => 'deadjournal', title => 'DeadJournal' },
-        { scheme => 'bluewhite',   title => 'Blue/White' },
-        { scheme => 'lynx',        title => 'Lynx' },
+        { scheme => 'deadjournal',     title => 'DeadJournal 2003' },
+        { scheme => 'deadjournal2015', title => 'DeadJournal 2015' },
+        { scheme => 'deadjournal2025', title => 'DeadJournal 2025 (responsive)' },
+        { scheme => 'bluewhite',       title => 'Blue/White' },
+        { scheme => 'lynx',            title => 'Lynx' },
     );
     $MINIMAL_BML_SCHEME = 'lynx';
 

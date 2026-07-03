@@ -64,11 +64,24 @@ project completely of my own accord.*
   engine (pinned to its last complete open-source state), with the S1 style
   system, BML pages, moods, the flat & challenge/response protocols — the whole
   2003 experience.
-- **The DeadJournal look** — the skull header, bone borders, parchment body,
-  "Enter the Crypt" / "Join the Undead" / "Random Grave" navigation, skull mood
-  icons, dark gothic journals. (The archival artwork ships with the repo — a
-  fully self-contained time capsule; see [PROVENANCE.md](PROVENANCE.md) and
+- **The DeadJournal look — in your choice of era.** The skull header, bone
+  borders, parchment body, "Enter the Crypt" / "Join the Undead" / "Random
+  Grave" navigation, skull mood icons, dark gothic journals. (The archival
+  artwork ships with the repo — a fully self-contained time capsule; see
+  [PROVENANCE.md](PROVENANCE.md) and
   [assets/authentic/DISCLAIMER.md](assets/authentic/DISCLAIMER.md).)
+  Setup asks which era you want — all three ship in every install, each
+  faithful to Wayback captures:
+  - **DeadJournal 2003** — the classic: the longest-standing design, arial
+    12px, `userinfo.gif` bullets, the live stats line, *"Shaddap and gimme a
+    GodDammed Deadjournal!"*
+  - **DeadJournal 2015** — tombstone bullets, bigger type, the later (angrier)
+    homepage copy, the "© Warped, Inc. — Get A Paid Account" footer
+  - **DeadJournal 2025** — the 2015 design with the minimal responsive layout
+    the real DJ shipped in 2025 (usable on your phone)
+
+  Micro-tuner bonus: append `?usescheme=deadjournal2015` (or `deadjournal`,
+  `deadjournal2025`) to any URL to time-travel instantly — no rebuild needed.
 - **Your old journal, back** — export every entry from deadjournal.com (or any
   classic LiveJournal-based site) and import it with original dates, moods, and
   music intact.

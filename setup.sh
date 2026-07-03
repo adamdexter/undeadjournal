@@ -102,6 +102,24 @@ else
     echo "Authentic artwork already present."
 fi
 
+# ------------------------------------------------------------------ era choice
+# Three eras of DeadJournal's look, all faithful to Wayback captures. All ship
+# in every install — this only sets the default (switch any time by editing
+# LJ_SCHEME in .env, or per-request with ?usescheme=deadjournal2015 etc.)
+if grep -q "^LJ_SCHEME=deadjournal" .env 2>/dev/null && [ $DEFAULTS -eq 0 ]; then
+    echo
+    echo "Which era of DeadJournal?"
+    echo "  1) 2003 — the classic (longest-standing design; the default)"
+    echo "  2) 2015 — tombstone bullets, bigger type, the angrier copy"
+    echo "  3) 2025 — the 2015 design with a minimal mobile-friendly layout"
+    era=$(ask "Choose 1-3" "1")
+    case "$era" in
+        2) sed -i.bak 's/^LJ_SCHEME=.*/LJ_SCHEME=deadjournal2015/' .env && rm -f .env.bak ;;
+        3) sed -i.bak 's/^LJ_SCHEME=.*/LJ_SCHEME=deadjournal2025/' .env && rm -f .env.bak ;;
+        *) sed -i.bak 's/^LJ_SCHEME=.*/LJ_SCHEME=deadjournal/'     .env && rm -f .env.bak ;;
+    esac
+fi
+
 # ------------------------------------------------------------------ build + start
 say "Building the site (first build downloads a lot — 5-15 minutes; later runs are fast)..."
 $COMPOSE build web || die "Build failed. Scroll up for the error; re-running ./setup.sh often helps

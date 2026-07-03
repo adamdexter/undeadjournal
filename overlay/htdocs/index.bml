@@ -1,32 +1,67 @@
 <?page
 title=>DeadJournal.com
 body<=
-<p><font face="Arial,Helvetica, sans-serif" color="#442948"><u><b>What is this place?</b></u></font>
-<br>This is a journal site (much like LiveJournal), but as you'll quickly see, not
-every journal is sunshine and songbirds.  This is a home for
-the journals nobody else wants to see &mdash; or even host.
-<br><img src="<?imgprefix?>/dot.gif" width="1" vspace="6" height="1"><br>Angry? Good. If you're a pissed off person who hates incompetence, sign up now!
-<br>
-<p><font face="Arial,Helvetica, sans-serif" color="#442948"><u><b>Who journals here?</b></u></font>
-<br>All sorts of people, recording their rants and psychotic thoughts!
 <?_code
-    # live stats, in the spirit of the 2006 homepage counter line
-    my ($users, $entries) = (0, 0);
-    eval {
-        my $dbr = LJ::get_db_reader();
-        if ($dbr) {
-            $users   = $dbr->selectrow_array("SELECT COUNT(*) FROM user") || 0;
-            $entries = $dbr->selectrow_array("SELECT COUNT(*) FROM log2") || 0;
-        }
-    };
-    return " To date, DeadJournal has <u>$users</u> members holding <u>$entries</u> entries, and still growing!" .
-           "  If stats and graphs interest you, check out our <a href=\"stats.bml\">Stats Page</a>.";
+{
+    # Era-aware intro: the copy changed over DeadJournal's life. Which era you
+    # see follows the active scheme (set at install; switchable live with
+    # ?usescheme=deadjournal2015 etc.). 2003 = the classic voice + live stats;
+    # 2015/2025 = the later, angrier voice with the stats line retired
+    # (matching the real site, where it was commented out by 2015).
+    my $scheme = eval { BML::get_scheme() } || '';
+    my $era = $scheme eq 'deadjournal2015' ? 2015
+            : $scheme eq 'deadjournal2025' ? 2025 : 2003;
+    my $h = sub { "<p><font face='Arial,Helvetica, sans-serif' color='#442948'><u><b>$_[0]</b></u></font><br>" };
+    my $spacer = "<br><img src='$LJ::IMGPREFIX/dot.gif' width='1' vspace='6' height='1'><br>";
+    my $ret = "";
+
+    if ($era == 2003) {
+        $ret .= $h->("What is this place?");
+        $ret .= "This is a journal site (much like LiveJournal), but as you'll quickly see, not"
+              . " every journal is sunshine and songbirds.  This is a home for"
+              . " the journals nobody else wants to see &mdash; or even host."
+              . $spacer
+              . "Angry? Good. If you're a pissed off person who hates incompetence, sign up now!<br>";
+        $ret .= $h->("Who journals here?");
+        $ret .= "All sorts of people, recording their rants and psychotic thoughts!";
+        my ($users, $entries) = (0, 0);
+        eval {
+            my $dbr = LJ::get_db_reader();
+            if ($dbr) {
+                $users   = $dbr->selectrow_array("SELECT COUNT(*) FROM user") || 0;
+                $entries = $dbr->selectrow_array("SELECT COUNT(*) FROM log2") || 0;
+            }
+        };
+        $ret .= " To date, DeadJournal has <u>$users</u> members holding <u>$entries</u> entries,"
+              . " and still growing!  If stats and graphs interest you, check out our"
+              . " <a href='stats.bml'>Stats Page</a>.";
+        $ret .= $h->("How do I use my DeadJournal?");
+        $ret .= "Figure it out, you'll be surprised on how easy it is.  If you cant figure it out.. well....";
+        $ret .= "<center><p><a href='create.bml'><font size='+1'><b>Shaddap and gimme a GodDammed Deadjournal!</b></font></a></center>";
+    } else {
+        # 2015/2025 voice (in the spirit of the mid-2015 rewrite)
+        $ret .= $h->("What is this place?");
+        $ret .= "This is a journal site, but as you'll quickly see, not every journal site is"
+              . " sunshine and songbirds. This is DEFINITELY not the place for the stuff you'd"
+              . " post on Facebook &mdash; or anything you'd want your family or most of your"
+              . " friends to read. This is where the raw feelings go: the anger, the hate, the"
+              . " frustration, the hurt &mdash; how you've been hurt, and how you've hurt other"
+              . " people. The things you can't write anywhere else. That's why we're here."
+              . $spacer
+              . "We love intelligent pissed off people. If you can conjugate verbs, hate"
+              . " incompetence, and have something to scream, you MUST sign up now!<br>";
+        $ret .= $h->("Who journals here?");
+        $ret .= "All sorts of people, recording their rants and psychotic (or sometimes even"
+              . " normal, medicated) thoughts! Even a famous person or two &mdash; but they"
+              . " don't tell anyone, and neither do we.";
+        $ret .= $h->("How do I use my DeadJournal?");
+        $ret .= "Figure it out, you'll be surprised on how easy it is.  If you cant figure it"
+              . " out.. well.... you click the link below.";
+        $ret .= "<center><br><p><a href='create.bml'><font size='+1'><b>Click to get a Deadjournal!</b></font></a></center>";
+    }
+    return $ret;
+}
 _code?>
-
-<p><font face="Arial,Helvetica, sans-serif" color="#442948"><u><b>How do I use my DeadJournal?</b></u></font>
-<br>Figure it out, you'll be surprised on how easy it is.  If you cant figure it out.. well....
-
-<center><p><a href="create.bml"><font size="+1"><b>Shaddap and gimme a GodDammed Deadjournal!</b></font></a></center>
 
 <p><font face="Arial,Helvetica, sans-serif" color="#442948"><u><b>The Basics</b></u></font>
 <p><div class="choice"><table width="100%" cellpadding="2" cellspacing="5">

@@ -1,0 +1,114 @@
+#
+# DeadJournal 2025 scheme — the 2015 design with the "very minimal responsive
+# layout" the DJ admin shipped in mid-2025 ("Not changing the default design,
+# just the layout to make it better for mobile, and displays larger than 720p").
+# Verified against the current live site: fluid full-width bands (tiling purple
+# bar), tomb-small.png bullets at 16x16, hr #6688AA, "(c) 2000-2025 Warped,
+# Inc." footer, content in BLOCKQUOTE, imagemaps gone.
+#
+
+_parent=>global.look
+
+PAGE<=
+{Fp}<html>
+<head><title>%%title%%</title>
+<?_code LJ::res_includes() _code?>
+<link href="/djstyle.css" rel="stylesheet" type="text/css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<style type="text/css">
+  html,body { margin:0; padding:0; }
+  BODY,TABLE,TR,TD { font-family:helvetica; font-size:14px; }
+  input[name="user"] { background: #fff url(<?imgprefix?>/tomb-small.png) no-repeat 0px 1px; padding-left: 18px; color: #00C; font-weight: bold; }
+  table.djband { width:100%; border-collapse:collapse; }
+  table.djband td { padding:0; vertical-align:top; }
+  td.djtile2 { background:url(<?imgprefix?>/deadjournal_header_02.jpg) repeat-x; }
+  td.djtile4 { background:url(<?imgprefix?>/deadjournal_header_04.jpg) repeat-x; }
+  td.djftile { background:url(<?imgprefix?>/deadjournal_footer_03.jpg) repeat-x; }
+  td.djleft  { width:20px; background:url(<?imgprefix?>/dj_leftback.jpg) repeat-y; }
+  td.djright { width:20px; background:url(<?imgprefix?>/dj_rightback.jpg) repeat-y; }
+  td.djnavcol { width:170px; background:url(<?imgprefix?>/dj_midback.jpg); padding:8px 4px 8px 10px; }
+  td.djmain   { background:url(<?imgprefix?>/dj_midback.jpg); padding:8px 14px; }
+  td.djfoottd { background:url(<?imgprefix?>/dj_midback.jpg); }
+  /* minimal responsive: below ~720px, hide the bone ends so the skull stays
+     centered, and stack the sidebar above the content full-width */
+  @media (max-width: 719px) {
+    td.djend { display:none; }
+    table.djnest, table.djnest tbody, table.djnest tr, table.djnest td.djnavcol, table.djnest td.djmain { display:block; width:100% !important; box-sizing:border-box; }
+    td.djleft, td.djright { display:none; }
+    blockquote { margin:6px 10px; }
+  }
+</style>
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+%%head%%
+</head>
+<body bgcolor="#000000" link="#200095" vlink="#160066" alink="#171918" text="#201b2f" %%bodyopts%%>
+
+<table class="djband" cellpadding="0" cellspacing="0"><tr>
+  <td class="djend" width="245"><a href="/"><img src="<?imgprefix?>/deadjournal_header_01.jpg" width="245" height="155" alt="Dead Journal" border="0"></a></td>
+  <td class="djtile2" height="155"></td>
+  <td width="250"><a href="/"><img src="<?imgprefix?>/deadjournal_header_03.jpg" width="250" height="155" alt="Dead Journal" border="0"></a></td>
+  <td class="djtile4" height="155"></td>
+  <td class="djend" width="245"><img src="<?imgprefix?>/deadjournal_header_05.jpg" width="245" height="155" alt="Dead Journal"></td>
+</tr></table>
+
+<table class="djband djnest" cellpadding="0" cellspacing="0"><tr>
+  <td class="djleft"></td>
+  <td class="djnavcol bodytext" valign="top">
+<!-- BEGIN LEFT COL -->
+<p><img src="<?imgprefix?>/tomb-small.png" width="16" height="16" hspace="2" align="absmiddle"><?_code
+    my $remote = eval { LJ::get_remote() };
+    if ($remote) {
+        my $user = LJ::ehtml($remote->{user});
+        my $ret = qq{<b><a href="/users/$user/">RIP&nbsp;$user</a></b><br>} .
+                  qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/logout.bml">Resurrection</a>};
+        $ret .= qq{<br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/astralprojection.bml">Astral&nbsp;Projection</a>}
+            if $LJ::AstralProjection::VERSION;
+        return $ret;
+    }
+    return qq{<a href="/login.bml">Enter&nbsp;the&nbsp;Crypt</a><br>} .
+           qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/openid/">OpenID</a>};
+_code?>
+<p><img src="<?imgprefix?>/tomb-small.png" width="16" height="16" hspace="2" align="absmiddle"><b>The&nbsp;Cemetery</b><br>&nbsp;&nbsp;&nbsp;&nbsp;- <?_code
+    my $uri = eval { BML::get_uri() } || '';
+    return $uri =~ m!^/(index\.bml)?$!
+        ? '<b><span style="background-color: #c6bfb7"><font color="#bd0031">The&nbsp;Morgue</font></span></b>'
+        : '<a href="/">The&nbsp;Morgue</a>';
+_code?><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/create.bml">Join&nbsp;the&nbsp;Undead</a><br>
+<p><img src="<?imgprefix?>/tomb-small.png" width="16" height="16" hspace="2" align="absmiddle"><b>Morgue&nbsp;Directory</b><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/random.bml">Random&nbsp;Grave</a><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/directory.bml">Place&nbsp;of&nbsp;Death</a><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/directorysearch.bml">Search&nbsp;Morgue</a><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/interests.bml">Interests</a><br>
+<p><img src="<?imgprefix?>/tomb-small.png" width="16" height="16" hspace="2" align="absmiddle"><b>Botched&nbsp;Murders</b><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/support/faq.bml">FAQ</a><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/lostinfo.bml">Lost&nbsp;Info?</a><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/support/">Spoon&nbsp;Feeding</a><br>
+<!-- END LEFT COL -->
+  </td>
+  <td class="djmain bodytext" valign="top">
+<!-- BEGIN RIGHT COL -->
+<blockquote>
+<?_code
+    return @errors && scalar @errors ? LJ::error_list(@errors) : '';
+_code?>
+%%body%%
+</blockquote>
+<!-- END RIGHT COL -->
+  </td>
+  <td class="djright"></td>
+</tr></table>
+
+<table class="djband" cellpadding="0" cellspacing="0"><tr>
+  <td class="djfoottd djfooter" align="center">
+<hr noshade size="1" color="#6688AA">
+<a href="/login.bml">Login/Logout</a><a href="/openid/">/OpenID</a>
+<br><br><strong>&copy; 2000-2025 <a href="https://www.warped.com/?refer=DeadJournal">Warped, Inc.</a> - Get A <a href="https://www.deadjournal.com/paidaccounts/">Paid Account</a> and keep DeadJournal around!</strong>
+<br>&nbsp;
+  </td>
+</tr></table>
+
+<table class="djband" cellpadding="0" cellspacing="0"><tr>
+  <td class="djend" width="245"><img src="<?imgprefix?>/deadjournal_footer_02.jpg" width="245" height="75" alt="" border="0"></td>
+  <td class="djftile" height="75"></td>
+  <td width="250"><img src="<?imgprefix?>/deadjournal_footer_04.jpg" width="250" height="75" alt="" border="0"></td>
+  <td class="djftile" height="75"></td>
+  <td class="djend" width="245"><img src="<?imgprefix?>/deadjournal_footer_06.jpg" width="245" height="75" alt=""></td>
+</tr></table>
+
+</body>
+</html>
+<=PAGE
