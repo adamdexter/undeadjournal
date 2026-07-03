@@ -34,8 +34,9 @@ your own crypt at `http://localhost:8080`.
   2003 experience.
 - **The DeadJournal look** — the skull header, bone borders, parchment body,
   "Enter the Crypt" / "Join the Undead" / "Random Grave" navigation, skull mood
-  icons, dark gothic journals. (The artwork is fetched from the Internet
-  Archive at install time — see [PROVENANCE.md](PROVENANCE.md).)
+  icons, dark gothic journals. (The archival artwork ships with the repo — a
+  fully self-contained time capsule; see [PROVENANCE.md](PROVENANCE.md) and
+  [assets/authentic/DISCLAIMER.md](assets/authentic/DISCLAIMER.md).)
 - **Your old journal, back** — export every entry from deadjournal.com (or any
   classic LiveJournal-based site) and import it with original dates, moods, and
   music intact.
@@ -152,8 +153,9 @@ resumes. Still stuck? `docker compose logs web` and open a GitHub issue with
 the last 30 lines.
 
 **The site shows the wrong look / plain look.** The artwork probably wasn't
-fetched. Run `scripts/fetch-authentic-skin.sh`, make sure `.env` says
-`LJ_SCHEME=deadjournal`, then `docker compose build web && docker compose up -d`.
+installed. Run `scripts/fetch-authentic-skin.sh` (it copies from the bundled
+`assets/authentic/` archive), make sure `.env` says `LJ_SCHEME=deadjournal`,
+then `docker compose build web && docker compose up -d`.
 
 **Export gets blocked (HTTP 403).** That's Cloudflare on deadjournal.com. Run
 `./export-journal` and follow the on-screen steps (open the site in your
@@ -171,10 +173,12 @@ engine internals, see [HACKING.md](HACKING.md).
 ## FAQ
 
 **Is this legal?** The LiveJournal server code is GPL open source — running and
-sharing it is exactly what the license is for. The DeadJournal *artwork* is not
-ours to redistribute, which is why the setup fetches it from the Internet
-Archive's public captures onto your machine instead of shipping it. Full
-story: [PROVENANCE.md](PROVENANCE.md).
+sharing it is exactly what the license is for. The DeadJournal *artwork* is
+copyrighted by its owners; it's bundled here purely as a preservation archive
+(sourced from public Wayback Machine captures), with a clear disclaimer and a
+prompt-takedown promise to the rights holders — and the project runs fine
+without it. Full story: [PROVENANCE.md](PROVENANCE.md) and
+[assets/authentic/DISCLAIMER.md](assets/authentic/DISCLAIMER.md).
 
 **Is this affiliated with DeadJournal.com?** No. It's an independent
 preservation/homage project. DeadJournal.com is still alive — if you love it,

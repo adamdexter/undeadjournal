@@ -1,17 +1,18 @@
 #!/usr/bin/env bash
 #
-# fetch-authentic-skin.sh — download the authentic DeadJournal artwork.
+# fetch-authentic-skin.sh — install the authentic DeadJournal artwork.
 #
-# The classic DeadJournal chrome (skull header/footer, bone borders, stylesheet,
-# favicon, mood icons) is copyrighted artwork, so this repository cannot include
-# it. This script downloads it to YOUR machine for YOUR personal install:
+# Preferred source: the bundled archive at assets/authentic/ (shipped with this
+# repo so the project is fully self-contained — see the DISCLAIMER.md there).
+# Fallback source, if that folder is ever absent: the same public archives the
+# bundle was built from —
 #
-#   - site chrome + icons: from the Internet Archive Wayback Machine's public
-#     captures of piktures.deadjournal.com / www.deadjournal.com (2006 era)
-#   - "SK Cute Skulls" mood icons: from the Dreamwidth open-source repository
+#   - site chrome + icons: the Internet Archive Wayback Machine's public
+#     captures of piktures.deadjournal.com / www.deadjournal.com (2006-2013)
+#   - "SK Cute Skulls" mood icons: the Dreamwidth open-source repository
 #
-# Run it from the repo root (setup.sh does this for you):  scripts/fetch-authentic-skin.sh
-# Re-run with --force to re-download everything.
+# Run from the repo root (setup.sh does this for you):  scripts/fetch-authentic-skin.sh
+#   --force     re-download everything from the network archives (refresh)
 #
 # If you skip this script, the site still works — it just uses the plain
 # classic-LiveJournal look (set LJ_SCHEME=bluewhite in .env).
@@ -31,6 +32,23 @@ UA="Mozilla/5.0 (compatible; undeadjournal-skin-fetch)"
 IMG_DIR="overlay/htdocs/img"
 MOOD_DIR="$IMG_DIR/mood/skcuteskulls"
 mkdir -p "$IMG_DIR" "$MOOD_DIR"
+
+# ---------------------------------------------------------------- local bundle
+# The repo ships the artwork in assets/authentic/ (self-contained time capsule;
+# see assets/authentic/DISCLAIMER.md). Install from there — no network needed.
+BUNDLE="assets/authentic/htdocs"
+if [ $FORCE -eq 0 ] && [ -d "$BUNDLE" ]; then
+    echo "Installing the authentic DeadJournal artwork from the bundled archive..."
+    cp -R "$BUNDLE/." overlay/htdocs/
+    if [ -s "$IMG_DIR/deadjournal_header_01.jpg" ] && [ -s overlay/htdocs/djstyle.css ]; then
+        moods_present=$(ls "$MOOD_DIR" 2>/dev/null | wc -l | tr -d ' ')
+        echo "Done — skin installed from assets/authentic (mood icons: $moods_present)."
+        echo "(If the site is already built, re-run ./setup.sh or"
+        echo " 'docker compose build web && docker compose up -d' so it gets baked in.)"
+        exit 0
+    fi
+    echo "Bundle looks incomplete — falling back to the network archives..."
+fi
 
 ok=0; skipped=0; failed=0; failed_req=0
 FAILED_LIST=""

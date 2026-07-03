@@ -21,30 +21,35 @@ comes from and why the packaging works the way it does.
   scripts, the `.look` scheme markup, docs): **GPL-2.0**, same as the engine it
   derives from. See [LICENSE](LICENSE).
 
-## The artwork (copyrighted — NOT in this repository)
+## The artwork (archival — bundled with a disclaimer)
 
 The DeadJournal visual identity — the skull header/footer images, bone borders,
 parchment backgrounds, `djstyle.css`, favicon, and nav icons — is the
 copyrighted work of DeadJournal.com (design credit: **mindvamp**). The
-"SK Cute Skulls" mood icons were drawn by their artist (Shala) for the
-Dreamwidth mood-theme collection.
+"SK Cute Skulls" mood icons were drawn by their artist for the Dreamwidth
+mood-theme collection.
 
-**None of that artwork is included in this repository.** Instead,
-`scripts/fetch-authentic-skin.sh` downloads it *onto your machine, for your
-personal installation*:
+So that this project remains a **self-contained time capsule** — usable even if
+the archives it was recovered from ever disappear — those assets are bundled in
+[`assets/authentic/`](assets/authentic/), together with a
+[DISCLAIMER](assets/authentic/DISCLAIMER.md) stating their provenance
+(public Wayback Machine captures, 2006–2013, and the public Dreamwidth
+repository), their preservation/educational purpose, and a **prompt-takedown
+promise**: any rights holder who wants them removed need only open an issue.
 
-- site chrome: from the Internet Archive Wayback Machine's public 2006 captures
-  of `piktures.deadjournal.com` / `www.deadjournal.com`
-- mood icons: from the public Dreamwidth repository
+To be plain about the legal position: a disclaimer is not a license, and this
+project claims none. The rights remain entirely with their owners. The bundle
+exists for archival resilience; the project is engineered to survive without
+it —
 
-This mirrors how engine-revival projects (OpenRA, GZDoom, etc.) handle
-original assets: the code is free; you supply the art. If you redistribute
-your installed copy, strip the fetched artwork first (everything the fetch
-script downloads is `.gitignore`d, so `git` won't let you commit it by
-accident).
+- `scripts/fetch-authentic-skin.sh` prefers the local bundle, and **falls back
+  to downloading from the public archives** if `assets/authentic/` is absent
+  (e.g., removed after a takedown request);
+- `LJ_SCHEME=bluewhite` in `.env` runs the site with the stock
+  classic-LiveJournal look and no DeadJournal artwork at all.
 
-If you prefer a fully-original install, skip the fetch (`LJ_SCHEME=bluewhite`
-in `.env`) and the site uses the stock classic-LiveJournal look.
+At install time the artwork is copied into `overlay/htdocs/` (those copies are
+gitignored — `assets/authentic/` is the single tracked source).
 
 ## Names & trademarks
 

@@ -59,10 +59,10 @@ docker-compose.override.yml
 # Database backups
 backups/
 
-# Authentic DeadJournal artwork — downloaded from the Internet Archive by
-# scripts/fetch-authentic-skin.sh at install time. This art is copyrighted
-# (DeadJournal/mindvamp; mood icons by their DW artists) and must NEVER be
-# committed to this repository. See PROVENANCE.md.
+# Installed artwork copies (install artifacts). The tracked source of the
+# authentic art is assets/authentic/ (with its DISCLAIMER.md);
+# scripts/fetch-authentic-skin.sh copies it here at install time. Keeping the
+# copies ignored means assets/authentic/ stays the single tracked source.
 overlay/htdocs/img/deadjournal_*.jpg
 overlay/htdocs/img/dj_*.jpg
 overlay/htdocs/img/miniskull.gif

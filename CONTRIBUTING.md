@@ -5,10 +5,12 @@ Delighted you're here. This is a preservation project — the bar is "keep the
 
 ## Ground rules
 
-1. **Never commit the artwork.** Everything `scripts/fetch-authentic-skin.sh`
-   downloads is copyrighted and gitignored. PRs containing skull JPEGs, the
-   authentic `djstyle.css`, favicon, or mood GIFs will be closed. See
-   [PROVENANCE.md](PROVENANCE.md).
+1. **The archival artwork lives in `assets/authentic/` and ONLY there.** That
+   folder ships with its provenance disclaimer and takedown promise
+   ([assets/authentic/DISCLAIMER.md](assets/authentic/DISCLAIMER.md)); the
+   installed copies under `overlay/htdocs/` are gitignored. Don't scatter
+   copyrighted media anywhere else in the repo, and don't add new copyrighted
+   assets without the same provenance treatment. See [PROVENANCE.md](PROVENANCE.md).
 2. **Read [HACKING.md](HACKING.md) before touching the engine.** Every patch in
    `web/Dockerfile` exists because something breaks without it; each is
    documented with its failure symptom.
