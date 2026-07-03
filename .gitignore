@@ -75,3 +75,13 @@ _test_ljhome/
 build.log
 # Your edited Caddyfile (contains your domain + password hash)
 caddy/Caddyfile
+
+# Plugin install artifacts (the tracked sources live under plugins/*/files/;
+# running plugins/<name>/install.sh copies them here — keeping the copies
+# ignored is what makes plugins optional).
+overlay/cgi-bin/LJ/AstralProjection.pm
+overlay/cgi-bin/ljlib-local.pl
+overlay/htdocs/astralprojection.bml
+# macOS/Finder duplicate artifacts of the (uncommittable) artwork
+overlay/htdocs/img/* 2.*
+overlay/htdocs/* 2.*

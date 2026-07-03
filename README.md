@@ -26,6 +26,38 @@ your own crypt at `http://localhost:8080`.
 
 ---
 
+## 🖤 A note from the author
+
+To be clear: as of this publishing, the **REAL** DeadJournal is still (un)alive
+and well at [DeadJournal.com](https://www.deadjournal.com). This project was
+created (1) out of nostalgia, for posterity, and (2) because I still use my
+DeadJournal — but with the lightspeed progression of AI and every website
+becoming a training ground, I no longer feel comfortable publishing content
+newer than about seven years old to the open web. I still wanted the authentic
+experience of writing in and visiting my journal — from the safety of my home
+NAS server.
+
+That said, I want to be clear and lead by example: **I am still a paid user on
+DeadJournal.com.** If you find yourself here in this repo, you must really love
+DeadJournal too — so let me remind you that the site runs purely on the
+goodwill of its admins and the minimal money donated by paid users. Show your
+support, show your love: [go upgrade to a paid
+membership](https://www.deadjournal.com/paidaccounts/) if it feels right for you.
+
+I did not create this repo as a way to off-board or steal users from the REAL
+DeadJournal. I did this out of love for DeadJournal, and to share with neurotic
+and nostalgic nerds like myself. And to put my money where my mouth is: this
+project includes a nifty **optional plugin** —
+[Astral Projection](plugins/astral-projection/) — that parallel-publishes
+entries you write locally to your real DeadJournal.com account, so you can run
+your private crypt *and* keep feeding the original. **Long (un)live
+DeadJournal.com!**
+
+*I have no affiliation with DeadJournal.com or Warped Inc., and I created this
+project completely of my own accord.*
+
+---
+
 ## What you get
 
 - **The real thing** — not a lookalike. The actual classic LiveJournal Perl
@@ -42,6 +74,10 @@ your own crypt at `http://localhost:8080`.
   music intact.
 - **Boring, reliable ops** — one command to back up, one to restore, survives
   reboots, keeps your data in a named Docker volume.
+- **🔮 Astral Projection** (optional plugin) — parallel-publish entries you
+  write locally to your **real DeadJournal.com** account, so your private crypt
+  and the original both get your words. See
+  [plugins/astral-projection/](plugins/astral-projection/).
 
 ## What you need
 

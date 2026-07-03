@@ -57,7 +57,9 @@ gitignored — `assets/authentic/` is the single tracked source).
   the DeadJournal skull identity belong to DeadJournal.com / its operators.
 - This project is **not affiliated with, endorsed by, or connected to** either
   site. Names are used nominatively — to describe what the software is and
-  what it's compatible with.
+  what it's compatible with. In the author's words: *"I have no affiliation
+  with DeadJournal.com or Warped Inc., and I created this project completely
+  of my own accord."*
 - The default `SITE_NAME` is "DeadJournal" purely as an homage default for
   private personal installs; change it in `.env` to anything you like.
 - DeadJournal.com is still online. If it matters to you, support it:

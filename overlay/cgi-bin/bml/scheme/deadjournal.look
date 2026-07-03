@@ -48,7 +48,21 @@ PAGE<=
 		<td width="20" background="<?imgprefix?>/dj_leftback.jpg" align="left"><img src="<?imgprefix?>/dot.gif" width="20" height="1" alt=""></td>
 		<td valign="top" class="bodytext" background="<?imgprefix?>/dj_midback.jpg" width="150">
 <!-- BEGIN LEFT COL -->
-<p><img src="<?imgprefix?>/userinfo.gif" width="10" height="10" hspace="2" align="absmiddle"><a href="/login.bml">Enter&nbsp;the&nbsp;Crypt</a><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/openid/">OpenID</a>
+<p><img src="<?imgprefix?>/userinfo.gif" width="10" height="10" hspace="2" align="absmiddle"><?_code
+    # logged out: Enter the Crypt. Logged in: RIP <username>, with Resurrection
+    # (log out) and, when that plugin is installed, Astral Projection.
+    my $remote = eval { LJ::get_remote() };
+    if ($remote) {
+        my $user = LJ::ehtml($remote->{user});
+        my $ret = qq{<b><a href="/users/$user/">RIP&nbsp;$user</a></b><br>} .
+                  qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/logout.bml">Resurrection</a>};
+        $ret .= qq{<br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/astralprojection.bml">Astral&nbsp;Projection</a>}
+            if $LJ::AstralProjection::VERSION;
+        return $ret;
+    }
+    return qq{<a href="/login.bml">Enter&nbsp;the&nbsp;Crypt</a><br>} .
+           qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/openid/">OpenID</a>};
+_code?>
 <p><img src="<?imgprefix?>/userinfo.gif" width="10" height="10" hspace="2" align="absmiddle"><b>The&nbsp;Cemetery</b><br>&nbsp;&nbsp;&nbsp;&nbsp;- <?_code
     my $uri = eval { BML::get_uri() } || '';
     return $uri =~ m!^/(index\.bml)?$!

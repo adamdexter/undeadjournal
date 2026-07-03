@@ -30,3 +30,6 @@ artwork from the public archives at install time instead, and
 **If you fork or redistribute this project**, this folder and this notice
 travel together. Do not use these assets outside the context of a personal
 DeadJournal-revival installation.
+
+*From the author: I have no affiliation with DeadJournal.com or Warped Inc.,
+and I created this project completely of my own accord.*

@@ -1,0 +1,88 @@
+<?page
+title=>Astral Projection
+body<=
+<?_code
+{
+    use strict;
+    use vars qw(%POST);
+
+    my $remote = LJ::get_remote();
+    unless ($remote) {
+        return "<?h1 The spirits don't know you h1?>" .
+               "<?p <a href='/login.bml'>Enter the Crypt</a> (log in) to configure Astral Projection. p?>";
+    }
+
+    LJ::AstralProjection::ensure_props();
+    LJ::load_user_props($remote, @LJ::AstralProjection::PROPS);
+
+    my $ret = "";
+    my $notice = "";
+
+    if (LJ::did_post()) {
+        my $user = LJ::trim($POST{'djuser'} || '');
+        $remote->set_prop('astral_djuser', $user);
+        # store ONLY the md5 of the password (all challenge auth needs);
+        # an empty password field keeps the previously saved one
+        if (length($POST{'djpass'} || '')) {
+            $remote->set_prop('astral_djpass_md5', Digest::MD5::md5_hex($POST{'djpass'}));
+        }
+        $remote->set_prop('astral_server',  LJ::trim($POST{'server'} || ''));
+        $remote->set_prop('astral_cookie',  LJ::trim($POST{'cookie'} || ''));
+        $remote->set_prop('astral_ua',      LJ::trim($POST{'ua'} || ''));
+        $remote->set_prop('astral_enabled', $POST{'enabled'} ? '1' : '0');
+        LJ::load_user_props($remote, @LJ::AstralProjection::PROPS);
+
+        if ($remote->{astral_djuser} && $remote->{astral_djpass_md5}) {
+            my ($ok, $msg) = LJ::AstralProjection::test_login($remote);
+            $notice = $ok
+                ? "<?warningbar Saved. The spirits answer: connected to the other side as <b>" . LJ::ehtml($msg) . "</b>. warningbar?>"
+                : "<?errorbar Saved, but the projection failed: " . LJ::ehtml($msg) . " errorbar?>";
+        } else {
+            $notice = "<?warningbar Saved. Enter your remote username and password to complete the ritual. warningbar?>";
+        }
+    }
+
+    my $v = sub { LJ::ehtml($remote->{$_[0]} || '') };
+    my $enabled = ($remote->{astral_enabled} || '') eq '1';
+    my $has_pw  = length($remote->{astral_djpass_md5} || '') ? 1 : 0;
+
+    $ret .= $notice;
+    $ret .= "<p><font face='Arial,Helvetica, sans-serif' color='#442948'><u><b>Astral Projection</b></u></font>";
+    $ret .= "<br>Write in the crypt; echo into the living world. When enabled, every new entry you";
+    $ret .= " post here is also posted to your account on the <b>real</b> DeadJournal.com";
+    $ret .= " (or any classic LiveJournal-protocol site).";
+    $ret .= "<br><img src='" . $LJ::IMGPREFIX . "/dot.gif' width='1' vspace='4' height='1'><br>";
+    $ret .= "Your remote password is never stored &mdash; only its MD5 digest, which is what the";
+    $ret .= " challenge/response login uses. Projections that fail never affect your local entry.";
+    $ret .= " Backdated entries and bulk imports are never projected.</p>";
+
+    if ($remote->{astral_last}) {
+        my ($state, $when, @rest) = split / /, $remote->{astral_last};
+        my $whenstr = $when ? scalar(localtime($when)) : '';
+        my $line = LJ::ehtml(join(' ', @rest));
+        $ret .= ($state eq 'OK')
+            ? "<?p <b>Last projection:</b> succeeded $whenstr &mdash; $line p?>"
+            : "<?p <b>Last projection:</b> <font color='#bd0031'>FAILED</font> $whenstr &mdash; $line p?>";
+    }
+
+    $ret .= "<form method='post' action='/astralprojection.bml'>";
+    $ret .= LJ::form_auth();
+    $ret .= "<table cellpadding='4'>";
+    $ret .= "<tr><td align='right'><b>Project to:</b></td><td><input type='checkbox' name='enabled' value='1'" . ($enabled ? " checked" : "") . "> enable Astral Projection</td></tr>";
+    $ret .= "<tr><td align='right'><b>Remote username:</b></td><td><input name='djuser' size='20' maxlength='25' value='" . $v->('astral_djuser') . "'></td></tr>";
+    $ret .= "<tr><td align='right'><b>Remote password:</b></td><td><input type='password' name='djpass' size='20'>" . ($has_pw ? " <i>(saved &mdash; leave blank to keep)</i>" : "") . "</td></tr>";
+    $ret .= "<tr><td colspan='2'><br><b>The fine print</b> (only needed in special circumstances)</td></tr>";
+    $ret .= "<tr><td align='right'>Remote server:</td><td><input name='server' size='50' value='" . $v->('astral_server') . "'> <i>blank = deadjournal.com</i></td></tr>";
+    $ret .= "<tr><td align='right'>Cloudflare cookie:</td><td><input name='cookie' size='50' value='" . $v->('astral_cookie') . "'> <i>cf_clearance=... if the remote site blocks the server</i></td></tr>";
+    $ret .= "<tr><td align='right'>User-Agent:</td><td><input name='ua' size='50' value='" . $v->('astral_ua') . "'> <i>to match your browser, with the cookie above</i></td></tr>";
+    $ret .= "<tr><td></td><td><input type='submit' value='Project...'></td></tr>";
+    $ret .= "</table></form>";
+
+    $ret .= "<?p <b>Remember:</b> the real DeadJournal runs on the goodwill of its admins and its";
+    $ret .= " paid users. If you project there, <a href='https://www.deadjournal.com/paidaccounts/'>consider a paid account</a>. p?>";
+
+    return $ret;
+}
+_code?>
+<=body
+page?>
