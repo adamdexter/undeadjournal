@@ -9,7 +9,7 @@ one-command importer for your old journal.
 Your entries. Your server. Nobody can shut it down, sell it, or train on it.
 
 ```
-git clone https://github.com/YOURNAME/undeadjournal
+git clone https://github.com/adamdexter/undeadjournal
 cd undeadjournal
 ./setup.sh
 ```
