@@ -85,3 +85,8 @@ overlay/htdocs/astralprojection.bml
 # macOS/Finder duplicate artifacts of the (uncommittable) artwork
 overlay/htdocs/img/* 2.*
 overlay/htdocs/* 2.*
+
+# Sync-tool/Finder conflict copies ("name 2.ext") — these appear spontaneously
+# and once smuggled copyrighted art past path-specific ignores. Never track them.
+* 2.*
+* 2
