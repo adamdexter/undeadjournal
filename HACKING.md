@@ -30,6 +30,7 @@ Applied to the freshly-cloned tree BEFORE `COPY overlay/`:
 8. `texttool.pl`: don't die on `*.text.local` files when the default language is `en` — *(text load aborts → EVERY UI label on the site renders blank)*
 9. `ljlang.pl`: `alloc_global_counter(...) || 0` — *(missing SUP hook → undef revid → SQL syntax error → same blank-label symptom)*
 10. `login.bml`: remove the OpenID/Facebook/Twitter block — *(2011 anachronism; this is a 2003 experience)*
+11. `LJ/Session.pm` `set_cookie`: strip any `:port` from the cookie `domain`, and drop the attribute entirely for dotless hosts — *(LJ_DOMAIN carries `host:8080` here, but a cookie `Domain` attribute must never contain a port: browsers reject the session cookie wholesale, so login 302s "successfully" then bounces back logged-out with no error. `Session.pm` passes `$LJ::DOMAIN` verbatim and ignores `$LJ::COOKIE_DOMAIN`, so no config-only fix exists. Paired with `$COOKIE_DOMAIN = [""]` in `ljconfig.pl` for the `LJ::Request` cookie path, and a `grep -q` build guard so a drifted sed anchor fails the build instead of silently no-opping.)*
 
 ## Overlay / Apache config (the other half)
 
@@ -94,6 +95,11 @@ a "production safety" and later UPDATEs fail); don't add `--innodb` (legacy
   (`modperl.pl` deletes itself from `%INC`).
 - Case-insensitive filesystems: a bare `lj/` gitignore rule also matches
   `overlay/cgi-bin/LJ/`. It's anchored as `/lj/` — keep it that way.
+- When adding a Dockerfile `sed` patch, verify the anchor bytes against the
+  file INSIDE the image (`docker exec ... sed -n 'N,Mp' file`), not against any
+  local checkout of the engine — snapshots differ in whitespace and line
+  numbers — and pair the sed with a `grep -q` guard so a missed anchor fails
+  the build loudly.
 
 ## Quick verification
 

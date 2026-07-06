@@ -12,7 +12,10 @@
 # Faithful deviations: the two tiling cells use WIDTH=30 images (as the current
 # live site does) instead of 2006's overflowing WIDTH=87/70, so the table sums to
 # exactly 800px in modern browsers; sidebar entries whose pages don't exist in
-# this build (Offerings, Download, DJ News, Advertise, Hauntings) are omitted.
+# this build (Grim Reaping/Download, Offerings, DJ News, Advertise, Schools,
+# Hauntings) are omitted. The logged-in member nav (R.I.P. block, Your Death
+# Bed, Login Settings, Coffin Accessories) is reconstructed from a 2026
+# screenshot of the live site — no logged-in Wayback capture exists.
 #
 
 _parent=>global.look
@@ -48,19 +51,37 @@ PAGE<=
 		<td width="20" background="<?imgprefix?>/dj_leftback.jpg" align="left"><img src="<?imgprefix?>/dot.gif" width="20" height="1" alt=""></td>
 		<td valign="top" class="bodytext" background="<?imgprefix?>/dj_midback.jpg" width="150">
 <!-- BEGIN LEFT COL -->
-<p><img src="<?imgprefix?>/userinfo.gif" width="10" height="10" hspace="2" align="absmiddle"><?_code
-    # logged out: Enter the Crypt. Logged in: RIP <username>, with Resurrection
-    # (log out) and, when that plugin is installed, Astral Projection.
+<p><?_code
+    # Logged out: Enter the Crypt (faithful to the 2006 logged-out capture).
+    # Logged in: the full member nav — no logged-in Wayback capture exists, so
+    # this is reconstructed from a 2026 screenshot of the live site's sidebar,
+    # with each gothic label mapped to this engine's page for that function:
+    #   Your Grave=your journal, Login Options=login.bml (shows session state),
+    #   Session Manager=manage/logins.bml, Resurrection=logout,
+    #   Paper Trails=update.bml, Obituary=manage/profile/,
+    #   Survived by...=friends/edit.bml (Filters=friends/filter.bml),
+    #   Timeline=calendar view, Eulogy=tools/memories.bml.
+    my $icon = qq{<img src="$LJ::IMGPREFIX/userinfo.gif" width="10" height="10" hspace="2" align="absmiddle">};
     my $remote = eval { LJ::get_remote() };
     if ($remote) {
         my $user = LJ::ehtml($remote->{user});
-        my $ret = qq{<b><a href="/users/$user/">RIP&nbsp;$user</a></b><br>} .
+        my $ret = qq{$icon<b>R.I.P.&nbsp;$user!</b><br>} .
+                  qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/users/$user/">Your&nbsp;Grave</a><br>} .
+                  qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/login.bml">Login&nbsp;Options</a><br>} .
+                  qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/manage/logins.bml">Session&nbsp;Manager</a><br>} .
                   qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/logout.bml">Resurrection</a>};
         $ret .= qq{<br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/astralprojection.bml">Astral&nbsp;Projection</a>}
             if $LJ::AstralProjection::VERSION;
+        $ret .= qq{<p>$icon<b>Your&nbsp;Death&nbsp;Bed</b><br>} .
+                qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/update.bml">Paper&nbsp;Trails</a><br>} .
+                qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/manage/profile/">Obituary</a><br>} .
+                qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/friends/edit.bml">Survived&nbsp;by...</a><br>} .
+                qq{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/friends/filter.bml">Filters</a><br>} .
+                qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/users/$user/calendar">Timeline</a><br>} .
+                qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/tools/memories.bml">Eulogy</a>};
         return $ret;
     }
-    return qq{<a href="/login.bml">Enter&nbsp;the&nbsp;Crypt</a><br>} .
+    return qq{$icon<a href="/login.bml">Enter&nbsp;the&nbsp;Crypt</a><br>} .
            qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/openid/">OpenID</a>};
 _code?>
 <p><img src="<?imgprefix?>/userinfo.gif" width="10" height="10" hspace="2" align="absmiddle"><b>The&nbsp;Cemetery</b><br>&nbsp;&nbsp;&nbsp;&nbsp;- <?_code
@@ -68,8 +89,26 @@ _code?>
     return $uri =~ m!^/(index\.bml)?$!
         ? '<b><span style="background-color: #c6bfb7"><font color="#bd0031">The&nbsp;Morgue</font></span></b>'
         : '<a href="/">The&nbsp;Morgue</a>';
-_code?><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/create.bml">Join&nbsp;the&nbsp;Undead</a><br>
+_code?><br><?_code
+    # Login Settings appears in the live site's Cemetery menu when logged in.
+    return eval { LJ::get_remote() }
+        ? '&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/manage/settings/">Login&nbsp;Settings</a><br>' .
+          '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/openid/">OpenID</a><br>'
+        : '';
+_code?>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/create.bml">Join&nbsp;the&nbsp;Undead</a><br>
 <p><img src="<?imgprefix?>/userinfo.gif" width="10" height="10" hspace="2" align="absmiddle"><b>Morgue&nbsp;Directory</b><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/random.bml">Random&nbsp;Grave</a><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/directory.bml">Place&nbsp;of&nbsp;Death</a><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/directorysearch.bml">Search&nbsp;Morgue</a><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/interests.bml">Interests</a><br>
+<?_code
+    # Coffin Accessories (logged-in only on the live site). Edit Tombstone =
+    # userpics, Dead Friends = your friends page. The live menu is cut off in
+    # our only reference screenshot below "Dead Friends" — remaining items
+    # unknown; add them if a fuller capture of the live sidebar turns up.
+    my $remote = eval { LJ::get_remote() } or return '';
+    my $user = LJ::ehtml($remote->{user});
+    my $icon = qq{<img src="$LJ::IMGPREFIX/userinfo.gif" width="10" height="10" hspace="2" align="absmiddle">};
+    return qq{<p>$icon<b>Coffin&nbsp;Accessories</b><br>} .
+           qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/editpics.bml">Edit&nbsp;Tombstone</a><br>} .
+           qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/users/$user/friends">Dead&nbsp;Friends</a><br>};
+_code?>
 <p><img src="<?imgprefix?>/userinfo.gif" width="10" height="10" hspace="2" align="absmiddle"><b>Botched&nbsp;Murders</b><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/support/faq.bml">FAQ</a><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/lostinfo.bml">Lost&nbsp;Info?</a><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/support/">Spoon&nbsp;Feeding</a><br>
 <!-- END LEFT COL -->
 		</td>

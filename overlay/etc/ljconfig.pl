@@ -34,7 +34,13 @@
     $STATPREFIX = "$SITEROOT/stc";
     $USERPIC_ROOT = "$SITEROOT/userpic";
 
-    $COOKIE_DOMAIN = ["", ".$DOMAIN"];
+    # Host-only session cookies. $DOMAIN may carry a port (LJ_DOMAIN=host:8080)
+    # and a cookie Domain attribute must never contain one — browsers reject
+    # the cookie and login silently bounces back logged-out. An empty domain
+    # binds the cookie to the exact host, which is right for this single-host
+    # deploy (localhost, LAN IP, or Tailscale name alike). Kept as an arrayref
+    # so ljdefaults.pl's `$COOKIE_DOMAIN ||= ".$DOMAIN"` can't clobber it.
+    $COOKIE_DOMAIN = [""];
     $COOKIE_PATH   = "/";
 
     $ADMIN_EMAIL     = "admin\@$DOMAIN";

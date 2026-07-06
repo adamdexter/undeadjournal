@@ -132,7 +132,16 @@ RUN set -eux; \
     sed -i 's@LJ::alloc_global_counter("ml_latest_updates_counter");@LJ::alloc_global_counter("ml_latest_updates_counter") || 0;@' "$LJHOME/cgi-bin/ljlang.pl"; \
     # 2003-era authenticity: remove the OpenID/Facebook/Twitter "or connect using"
     # block from the login page (social login is a ~2011 anachronism for DeadJournal).
-    sed -i '/\.or\.connect\.using/d; /icons\/openid-32\.gif/d' "$LJHOME/htdocs/login.bml"
+    sed -i '/\.or\.connect\.using/d; /icons\/openid-32\.gif/d' "$LJHOME/htdocs/login.bml"; \
+    # Session cookies: LJ_DOMAIN carries a port (host:8080), but a cookie
+    # Domain attribute must never contain one — browsers reject the cookie and
+    # web login silently bounces back to the homepage logged out. Session.pm's
+    # own set_cookie (used for ljmastersession/ljloggedin/BMLschemepref) takes
+    # $LJ::DOMAIN verbatim and ignores $LJ::COOKIE_DOMAIN, so normalize there:
+    # strip the port, and drop the attribute for dotless hosts (localhost, bare
+    # NAS names) — host-only cookies are the only variant all browsers accept.
+    sed -i 's|my $domain[[:space:]]*=[[:space:]]*delete $opts{domain};|my $domain = delete $opts{domain}; if ($domain) { $domain =~ s/:[0-9]+$//; $domain = q{} unless $domain =~ /[.]/; }|' "$LJHOME/cgi-bin/LJ/Session.pm"; \
+    grep -q 'q{} unless' "$LJHOME/cgi-bin/LJ/Session.pm"  # fail the build if the cookie patch missed
 
 # --- DeadJournal overlay: etc/ljconfig.pl, the SiteScheme, skin assets,
 #     gothic label overrides (merged on top of $LJHOME). ---
