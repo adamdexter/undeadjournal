@@ -111,10 +111,25 @@ RUN set -eux; \
     # procnotify_check (cross-process cache invalidation; unneeded on a single
     # server) can run before the request DB handle is ready; guard the undef.
     sed -i 's|my $max = $dbr->selectrow_array("SELECT MAX(nid) FROM procnotify");|my $max = $dbr ? $dbr->selectrow_array("SELECT MAX(nid) FROM procnotify") : undef;|' "$LJHOME/cgi-bin/ljlib.pl"; \
-    # Skip S2 system-style population: compiling the S2 layers triggers a fatal
-    # "MySQL server has gone away" that aborts the rest of populate. DeadJournal is
-    # S1-era; S1 styles still populate. (Comment out only the populate_s2() call.)
-    sed -i 's|^\(\s*\)populate_s2();|\1print "Skipping S2 style population (DeadJournal uses S1).\\n";|' "$LJHOME/bin/upgrading/update-db.pl"; \
+    # S2 system-style population used to crash with "MySQL server has gone
+    # away" (and was skipped entirely for months): the real compile pass forks
+    # a child per layer AFTER LJ::end_request() has torn down the script's DB
+    # handle, and parent + every child keep using the dead handle captured in
+    # the $compile closure ($dbh is only refreshed after the loop — the code
+    # even says "we've likely lost a DB connection"). Children's exit statuses
+    # are also ignored, so compile failures were silently swallowed. Compile
+    # in-process on a freshly-fetched handle instead: reliable, and failures
+    # are loud. (Live DeadJournal offers S2 — "Mutilate (S2)" — so S2 layers
+    # are part of the authentic experience, not an anachronism.)
+    perl -i -0777 -pe 's/my \$pid = fork;\s*if \(\$pid\) \{\s*waitpid\(\$pid, 0\);\s*\} else \{\s*exit \$compile->\(\@args\);\s*\}/\$dbh = LJ::get_db_writer(); \$dbh->{RaiseError} = 0; \$compile->(\@args);/s' "$LJHOME/bin/upgrading/update-db.pl"; \
+    ! grep -q 'waitpid' "$LJHOME/bin/upgrading/update-db.pl"; \
+    # ...and stop the two-pass populate from allocating every layer TWICE on a
+    # fresh DB: the real compile pass ignores the ids the dry pass just
+    # allocated ($existing is only fetched once, before either pass) and
+    # allocates a full second set, leaving ~330 ghost rows with no compiled
+    # code. Let the real pass reuse the dry pass's id via %layer.
+    sed -i "s|my \$id = \$existing->{\$base} ? \$existing->{\$base}->{'s2lid'} : 0;|my \$id = \$existing->{\$base} ? \$existing->{\$base}->{'s2lid'} : (\$layer{\$base} ? \$layer{\$base}->{'id'} : 0);|" "$LJHOME/bin/upgrading/update-db.pl"; \
+    grep -qF '($layer{$base} ? $layer{$base}' "$LJHOME/bin/upgrading/update-db.pl"; \
     # Make the site scheme configurable at runtime (the engine reads
     # $env->{DefaultScheme}; lj-bml-init.pl sets BML config at startup).
     # LJ_SCHEME=deadjournal (authentic chrome; needs the fetched artwork) or

@@ -67,6 +67,9 @@
         # never-open-sourced LJ::Pay::Payment::PayItem and dies. The page
         # skips it for non-SUP users when this flag is set.
         'userhead_nonsup' => 1,
+        # S2 journal rendering calls $LJ::SHARE_THIS_URL_GEN (a SUP ShareThis
+        # widget, undefined here — and a 2008+ anachronism) unless disabled.
+        'sharethis'       => 1,
     );
 
     ###

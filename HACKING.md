@@ -35,6 +35,21 @@ Applied to the freshly-cloned tree BEFORE `COPY overlay/`:
 13. `bin/upgrading/s1styles.dat`: `livejournal userinfo`→`deadjournal userinfo`, `livejournal calendar`→`journal archive`, label `>calendar<`→`>archive<` — *(brands the S1 journal styles like the live site; labels only, hrefs untouched. Loaded by `update-db.pl --populate`, which runs only on first bootstrap — on an existing DB, re-run it manually, `DELETE FROM s1stylecache`, restart memcached)*
 14. `editjournal.bml`: `%POST->{$_}` → `$POST{$_}` — *(hash-as-a-reference, removed in Perl 5.22; the edit-entries page dies)*
 15. `LJ/User/PropStorage.pm`: skip unknown props in `get_handler_multi` instead of croaking — *(SUP-era pages reference props this tree never defines, e.g. `userapps_authorized` on userinfo.bml; an unknown prop should read as unset, not 500 the page)*
+16. `update-db.pl` `populate_s2`: compile in-process on a fresh DB handle instead of forking — *(the "MySQL server has gone away" that got S2 skipped entirely: the compile pass forked per layer after `LJ::end_request()` had torn down the script's handle, every child inherited the dead handle through the `$compile` closure, and child exit statuses were ignored so failures were silent)*
+17. `update-db.pl` `populate_s2`: reuse the dry-pass layer id via `%layer` — *(the two-pass populate otherwise allocates every system layer twice on a fresh DB — ~330 ghost rows with no compiled code)*
+
+S2 is fully enabled: bootstrap populates S1 + S2 system styles (all layers
+compile), the `/customize/` wizard and advanced layer editor work, and the
+sidebar's "Design Your Tomb" section links Butcher (S1), Mutilate (S2), Style
+Create/Edit, and Moody Dead. Two overlay fixes make S2 rendering work:
+`overlay/src/s2/S2.pm` `load_layers_from_db` accepts the newer
+`($opts, $db, @ids)` call shape (the harvested runtime predated it and called
+`->prepare` on the options hashref — every S2 journal 500'd), and
+`%DISABLED{sharethis}=1` in ljconfig.pl (S2 rendering calls the undefined SUP
+`$LJ::SHARE_THIS_URL_GEN` otherwise). If a DB was bootstrapped before these
+fixes: clear the `s2*` tables, re-run `update-db.pl --runsql --populate`, and
+restart memcached. WURFL "empty useragents storage" warnings on S2 pages are
+harmless (mobile detection degrades to "not mobile").
 
 Related overlay fixes (not Dockerfile seds): `overlay/cgi-bin/Apache/BML.pm`
 passes `($scratch, $elhash)` to `_code` blocks — the 2011 pages that share

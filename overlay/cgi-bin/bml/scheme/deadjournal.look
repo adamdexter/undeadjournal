@@ -99,14 +99,14 @@ _code?><br><?_code
 _code?>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/create.bml">Join&nbsp;the&nbsp;Undead</a><br>
 <p><img src="<?imgprefix?>/userinfo.gif" width="10" height="10" hspace="2" align="absmiddle"><b>Morgue&nbsp;Directory</b><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/random.bml">Random&nbsp;Grave</a><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/directory.bml">Place&nbsp;of&nbsp;Death</a><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/directorysearch.bml">Search&nbsp;Morgue</a><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/interests.bml">Interests</a><br>
 <?_code
-    # Coffin Accessories (logged-in only on the live site) — the management
-    # menu, full list from a 2026 screenshot of the live update page. Gothic
-    # label → function: Edit Tombstone=edit profile, Dead Friends=edit
-    # friends, Old Entries=edit entries, Autopsy Photos=userpics,
-    # Dead Password=change password, Grave Management=journal management,
-    # Community Manager / Tag Manager as named. The live site also shows a
-    # "Design Your Tomb" (styles) section below this; omitted — this build's
-    # style pages are S2-era and don't match the S1 journals we serve.
+    # Coffin Accessories + Design Your Tomb (logged-in only on the live
+    # site) — the management menus, full lists from 2026 screenshots of the
+    # live site. Gothic label → function: Edit Tombstone=edit profile,
+    # Dead Friends=edit friends, Old Entries=edit entries, Autopsy
+    # Photos=userpics, Dead Password=change password, Grave
+    # Management=journal management, Community Manager / Tag Manager as
+    # named; Butcher=S1 styles, Mutilate=S2 customize wizard, Style
+    # Create/Edit=S1 style editor, Moody Dead=mood themes.
     my $remote = eval { LJ::get_remote() } or return '';
     my $icon = qq{<img src="$LJ::IMGPREFIX/userinfo.gif" width="10" height="10" hspace="2" align="absmiddle">};
     return qq{<p>$icon<b>Coffin&nbsp;Accessories</b><br>} .
@@ -117,7 +117,13 @@ _code?>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/create.bml">Join&nbsp;the&nbsp;Undead
            qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/changepassword.bml">Dead&nbsp;Password</a><br>} .
            qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/manage/">Grave&nbsp;Management</a><br>} .
            qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/community/manage.bml">Community&nbsp;Manager</a><br>} .
-           qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/manage/tags.bml">Tag&nbsp;Manager</a><br>};
+           qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/manage/tags.bml">Tag&nbsp;Manager</a><br>} .
+           qq{<p>$icon<b>Design&nbsp;Your&nbsp;Tomb</b><br>} .
+           qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/styles/">Butcher&nbsp;(S1)</a><br>} .
+           qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/customize/">Mutilate&nbsp;(S2)</a><br>} .
+           qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/styles/create.bml">Style&nbsp;Create</a><br>} .
+           qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/styles/edit.bml">Style&nbsp;Edit</a><br>} .
+           qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/manage/moodthemes.bml">Moody&nbsp;Dead</a><br>};
 _code?>
 <p><img src="<?imgprefix?>/userinfo.gif" width="10" height="10" hspace="2" align="absmiddle"><b>Botched&nbsp;Murders</b><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/support/faq.bml">FAQ</a><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/lostinfo.bml">Lost&nbsp;Info?</a><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/support/">Spoon&nbsp;Feeding</a><br>
 <!-- END LEFT COL -->

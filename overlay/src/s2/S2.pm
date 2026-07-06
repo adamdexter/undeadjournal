@@ -210,6 +210,11 @@ sub load_layer
 
 sub load_layers_from_db
 {
+    # Newer LJ::S2 (cgi-bin/LJ/S2.pm load_layers) calls this as
+    # ($opts, $db, @layers) where $opts->{cache} is a per-layer memcache
+    # callback; this harvested runtime predates that. Accept both shapes —
+    # with the old one-arg-then-db form, $opts is simply absent.
+    my $opts = ref $_[0] eq 'HASH' ? shift : undef;
     my ($db, @layers) = @_;
     my $maxtime = 0;
     my @to_load;
@@ -239,6 +244,8 @@ sub load_layers_from_db
         }
         $domain->{layercomp}{$id} = $comptime;
         $maxtime = $comptime if $comptime > $maxtime;
+        $opts->{cache}->($id, $comp, $comptime)
+            if $opts && ref $opts->{cache} eq 'CODE';
     }
     return $maxtime;
 }
