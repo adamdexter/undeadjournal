@@ -181,6 +181,15 @@ it, and give it the address you'll use.
   for personal use) on the server and your devices — you can reach your journal
   from anywhere, and it stays completely off the public internet. **This is the
   recommended way.**
+  > **Pick one address and stick to it.** Set `LJ_DOMAIN` / `LJ_SITEROOT` (in
+  > `.env`) to a single canonical hostname — your Tailscale MagicDNS name
+  > (`host.your-tailnet.ts.net`) is ideal, since it resolves the same at home
+  > and away. Session cookies are host-only, so if you log in via one address
+  > (say the LAN IP) but the site's links use another (the Tailscale name),
+  > you'll appear logged out. Include the port if you publish one, e.g.
+  > `LJ_DOMAIN=host.your-tailnet.ts.net:8080` — the port is handled correctly.
+  > On a home server also set `BIND_ADDR=0.0.0.0` and let your firewall (allow
+  > the LAN subnet + Tailscale's `100.64.0.0/10`, deny the rest) be the boundary.
 - ⚠️ **Public internet (VPS with a domain)**: strongly discouraged — this
   codebase stopped receiving security fixes over a decade ago. If you truly
   need it public, at minimum put it behind the included Caddy proxy with HTTPS
