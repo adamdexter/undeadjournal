@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Post a folder of Markdown notes into your LOCAL journal, using each file's
+# creation date as the entry date. Interactive — just run it:
+#   ./import-markdown --dir "~/Documents/Bear export/DJ-2026"
+#   ./import-markdown --dir DIR --dry-run          (preview, post nothing)
+#   ./import-markdown --dir DIR --security public  (default is private)
+exec python3 "$(dirname "$0")/import/load_markdown.py" "$@"
