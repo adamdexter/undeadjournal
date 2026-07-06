@@ -63,6 +63,10 @@
         'esn'             => 1,
         'esn-userevents'  => 1,
         'tellafriend'     => 1,
+        # SUP paid "userheads" on manage/profile: the section calls the
+        # never-open-sourced LJ::Pay::Payment::PayItem and dies. The page
+        # skips it for non-SUP users when this flag is set.
+        'userhead_nonsup' => 1,
     );
 
     ###

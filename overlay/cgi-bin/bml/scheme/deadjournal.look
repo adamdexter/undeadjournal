@@ -54,13 +54,14 @@ PAGE<=
 <p><?_code
     # Logged out: Enter the Crypt (faithful to the 2006 logged-out capture).
     # Logged in: the full member nav — no logged-in Wayback capture exists, so
-    # this is reconstructed from a 2026 screenshot of the live site's sidebar,
+    # this is reconstructed from 2026 screenshots of the live site's sidebar,
     # with each gothic label mapped to this engine's page for that function:
     #   Your Grave=your journal, Login Options=login.bml (shows session state),
     #   Session Manager=manage/logins.bml, Resurrection=logout,
-    #   Paper Trails=update.bml, Obituary=manage/profile/,
-    #   Survived by...=friends/edit.bml (Filters=friends/filter.bml),
+    #   Paper Trails=update.bml, Obituary=userinfo.bml (your profile, read),
+    #   Survived by...=your friends page (Filters=friends/filter.bml),
     #   Timeline=calendar view, Eulogy=tools/memories.bml.
+    #   (Editing lives under Coffin Accessories, matching the live site.)
     my $icon = qq{<img src="$LJ::IMGPREFIX/userinfo.gif" width="10" height="10" hspace="2" align="absmiddle">};
     my $remote = eval { LJ::get_remote() };
     if ($remote) {
@@ -74,8 +75,8 @@ PAGE<=
             if $LJ::AstralProjection::VERSION;
         $ret .= qq{<p>$icon<b>Your&nbsp;Death&nbsp;Bed</b><br>} .
                 qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/update.bml">Paper&nbsp;Trails</a><br>} .
-                qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/manage/profile/">Obituary</a><br>} .
-                qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/friends/edit.bml">Survived&nbsp;by...</a><br>} .
+                qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/userinfo.bml?user=$user">Obituary</a><br>} .
+                qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/users/$user/friends">Survived&nbsp;by...</a><br>} .
                 qq{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/friends/filter.bml">Filters</a><br>} .
                 qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/users/$user/calendar">Timeline</a><br>} .
                 qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/tools/memories.bml">Eulogy</a>};
@@ -98,16 +99,25 @@ _code?><br><?_code
 _code?>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/create.bml">Join&nbsp;the&nbsp;Undead</a><br>
 <p><img src="<?imgprefix?>/userinfo.gif" width="10" height="10" hspace="2" align="absmiddle"><b>Morgue&nbsp;Directory</b><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/random.bml">Random&nbsp;Grave</a><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/directory.bml">Place&nbsp;of&nbsp;Death</a><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/directorysearch.bml">Search&nbsp;Morgue</a><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/interests.bml">Interests</a><br>
 <?_code
-    # Coffin Accessories (logged-in only on the live site). Edit Tombstone =
-    # userpics, Dead Friends = your friends page. The live menu is cut off in
-    # our only reference screenshot below "Dead Friends" — remaining items
-    # unknown; add them if a fuller capture of the live sidebar turns up.
+    # Coffin Accessories (logged-in only on the live site) — the management
+    # menu, full list from a 2026 screenshot of the live update page. Gothic
+    # label → function: Edit Tombstone=edit profile, Dead Friends=edit
+    # friends, Old Entries=edit entries, Autopsy Photos=userpics,
+    # Dead Password=change password, Grave Management=journal management,
+    # Community Manager / Tag Manager as named. The live site also shows a
+    # "Design Your Tomb" (styles) section below this; omitted — this build's
+    # style pages are S2-era and don't match the S1 journals we serve.
     my $remote = eval { LJ::get_remote() } or return '';
-    my $user = LJ::ehtml($remote->{user});
     my $icon = qq{<img src="$LJ::IMGPREFIX/userinfo.gif" width="10" height="10" hspace="2" align="absmiddle">};
     return qq{<p>$icon<b>Coffin&nbsp;Accessories</b><br>} .
-           qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/editpics.bml">Edit&nbsp;Tombstone</a><br>} .
-           qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/users/$user/friends">Dead&nbsp;Friends</a><br>};
+           qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/manage/profile/">Edit&nbsp;Tombstone</a><br>} .
+           qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/friends/edit.bml">Dead&nbsp;Friends</a><br>} .
+           qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/editjournal.bml">Old&nbsp;Entries</a><br>} .
+           qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/editpics.bml">Autopsy&nbsp;Photos</a><br>} .
+           qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/changepassword.bml">Dead&nbsp;Password</a><br>} .
+           qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/manage/">Grave&nbsp;Management</a><br>} .
+           qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/community/manage.bml">Community&nbsp;Manager</a><br>} .
+           qq{&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/manage/tags.bml">Tag&nbsp;Manager</a><br>};
 _code?>
 <p><img src="<?imgprefix?>/userinfo.gif" width="10" height="10" hspace="2" align="absmiddle"><b>Botched&nbsp;Murders</b><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/support/faq.bml">FAQ</a><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/lostinfo.bml">Lost&nbsp;Info?</a><br>&nbsp;&nbsp;&nbsp;&nbsp;- <a href="/support/">Spoon&nbsp;Feeding</a><br>
 <!-- END LEFT COL -->

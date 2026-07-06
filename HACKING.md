@@ -31,6 +31,21 @@ Applied to the freshly-cloned tree BEFORE `COPY overlay/`:
 9. `ljlang.pl`: `alloc_global_counter(...) || 0` — *(missing SUP hook → undef revid → SQL syntax error → same blank-label symptom)*
 10. `login.bml`: remove the OpenID/Facebook/Twitter block — *(2011 anachronism; this is a 2003 experience)*
 11. `LJ/Session.pm` `set_cookie`: strip any `:port` from the cookie `domain`, and drop the attribute entirely for dotless hosts — *(LJ_DOMAIN carries `host:8080` here, but a cookie `Domain` attribute must never contain a port: browsers reject the session cookie wholesale, so login 302s "successfully" then bounces back logged-out with no error. `Session.pm` passes `$LJ::DOMAIN` verbatim and ignores `$LJ::COOKIE_DOMAIN`, so no config-only fix exists. Paired with `$COOKIE_DOMAIN = [""]` in `ljconfig.pl` for the `LJ::Request` cookie path, and a `grep -q` build guard so a drifted sed anchor fails the build instead of silently no-opping.)*
+12. `manage/settings/index.bml`: drop the `LJ::Setting::Display::SecretQuestion` line — *(its userprop has no definition in this tree; the prop-storage handler croaks and the whole settings page dies)*
+13. `bin/upgrading/s1styles.dat`: `livejournal userinfo`→`deadjournal userinfo`, `livejournal calendar`→`journal archive`, label `>calendar<`→`>archive<` — *(brands the S1 journal styles like the live site; labels only, hrefs untouched. Loaded by `update-db.pl --populate`, which runs only on first bootstrap — on an existing DB, re-run it manually, `DELETE FROM s1stylecache`, restart memcached)*
+14. `editjournal.bml`: `%POST->{$_}` → `$POST{$_}` — *(hash-as-a-reference, removed in Perl 5.22; the edit-entries page dies)*
+15. `LJ/User/PropStorage.pm`: skip unknown props in `get_handler_multi` instead of croaking — *(SUP-era pages reference props this tree never defines, e.g. `userapps_authorized` on userinfo.bml; an unknown prop should read as unset, not 500 the page)*
+
+Related overlay fixes (not Dockerfile seds): `overlay/cgi-bin/Apache/BML.pm`
+passes `($scratch, $elhash)` to `_code` blocks — the 2011 pages that share
+state across blocks (update, editjournal, talkread, imgupload, inbox/compose)
+treat `$_[0]` as the scratch area, and with `$req` first they die on the
+fields-restricted request hash ("Sorry, there was a problem." on the update
+page and comment threads). New no-op stubs: `LJ::UserHead` (arrayref from
+`get_all_userheads`), `LJ::SUP` (preloaded from `DeadJournalChildInit.pm`;
+nothing `use`s it), `LJ::UserApps::Activities` (compile-time `use` in
+userinfo.bml). Plus `%DISABLED{userhead_nonsup}=1` in ljconfig.pl to skip the
+SUP paid-userheads section of manage/profile.
 
 ## Overlay / Apache config (the other half)
 

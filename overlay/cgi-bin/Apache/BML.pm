@@ -759,7 +759,14 @@ sub bml_block
 
         my $cv = \&{"${md5_package}::${md5_handler}"};
         $req->{clean_package} = $md5_package;
-        my $ret = eval { $cv->($req, $req->{'scratch'}, $elhash || {}) };
+        # ($scratch, $elhash) — NOT ($req, ...): the 2011 htdocs pages that
+        # share state across _code blocks (update.bml, editjournal.bml,
+        # talkread.bml, imgupload*.bml, inbox/compose.bml) treat $_[0] as "a
+        # pre-request scratch area", and lynx.look reads $_[1] as elhash.
+        # Passing $req first makes them poke the fields-restricted request
+        # hash: "Attempt to access disallowed key" → every such page dies
+        # with "Sorry, there was a problem."
+        my $ret = eval { $cv->($req->{'scratch'}, $elhash || {}) };
         return handle_code_error($env, $@) if $@;
 
         # don't call bml_decode if BML::noparse() told us not to, there's

@@ -141,7 +141,26 @@ RUN set -eux; \
     # strip the port, and drop the attribute for dotless hosts (localhost, bare
     # NAS names) — host-only cookies are the only variant all browsers accept.
     sed -i 's|my $domain[[:space:]]*=[[:space:]]*delete $opts{domain};|my $domain = delete $opts{domain}; if ($domain) { $domain =~ s/:[0-9]+$//; $domain = q{} unless $domain =~ /[.]/; }|' "$LJHOME/cgi-bin/LJ/Session.pm"; \
-    grep -q 'q{} unless' "$LJHOME/cgi-bin/LJ/Session.pm"  # fail the build if the cookie patch missed
+    grep -q 'q{} unless' "$LJHOME/cgi-bin/LJ/Session.pm"; \
+    # (The BML _code calling-convention fix lives in overlay/cgi-bin/Apache/
+    # BML.pm — a harvested overlay file, not part of the fetched tree.)
+    # Drop the SUP-era "secret question" tile from /manage/settings/: its
+    # userprop (secret_question_text) has no definition in this tree, so the
+    # prop-storage handler croaks and the whole settings page dies. (Secret
+    # questions are a mid-2000s SUP feature — an anachronism here anyway.)
+    sed -i '/LJ::Setting::Display::SecretQuestion/d' "$LJHOME/htdocs/manage/settings/index.bml"; \
+    ! grep -q 'SecretQuestion' "$LJHOME/htdocs/manage/settings/index.bml"; \
+    # DeadJournal-brand the S1 journal styles the way the live site does:
+    # "livejournal userinfo" → "deadjournal userinfo", and the calendar view
+    # is called the "archive" ("journal archive") on DeadJournal. Link labels
+    # only — hrefs (/calendar/ URLs) are untouched.
+    sed -i 's|>livejournal userinfo<|>deadjournal userinfo<|g; s|>livejournal calendar<|>journal archive<|g; s|>calendar<|>archive<|g' "$LJHOME/bin/upgrading/s1styles.dat"; \
+    grep -q 'deadjournal userinfo' "$LJHOME/bin/upgrading/s1styles.dat"; \
+    # editjournal.bml uses "%POST->{$_}" — the hash-as-a-reference idiom,
+    # deprecated forever and REMOVED in Perl 5.22 ("Can't use a hash as a
+    # reference"); the page dies on load. Sole occurrence in the tree.
+    sed -i 's|%POST->{$_}|$POST{$_}|' "$LJHOME/htdocs/editjournal.bml"; \
+    ! grep -qF '%POST->' "$LJHOME/htdocs/editjournal.bml"
 
 # --- DeadJournal overlay: etc/ljconfig.pl, the SiteScheme, skin assets,
 #     gothic label overrides (merged on top of $LJHOME). ---

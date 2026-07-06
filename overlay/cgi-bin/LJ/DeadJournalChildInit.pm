@@ -1,5 +1,9 @@
 package LJ::DeadJournalChildInit;
 use strict;
+# Preload the LJ::SUP stub: manage/profile and misc/suggest_qotd call
+# LJ::SUP->is_remote_sup without use'ing it (real SUP deployments preloaded
+# the module), so it has to be in memory before any request runs.
+use LJ::SUP;
 
 # mod_perl prefork fix: the parent process connects to the master DB at config
 # load (e.g. LJ::Lang::init_bml in modperl.pl). Forked children inherit that
