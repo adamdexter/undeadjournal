@@ -27,7 +27,7 @@ are handled two ways:
 
 Python 3 standard library only. Interactive; run via ./import-markdown.
 
-  ./import-markdown --dir "~/Documents/Bear export/DJ-2026"
+  ./import-markdown --dir "path/to/your/notes"
   ./import-markdown --dir DIR --dry-run          # preview, post nothing
 """
 

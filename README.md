@@ -148,6 +148,14 @@ Works for any classic LiveJournal-codebase site, not just DeadJournal:
 > **Do this soon.** DeadJournal has been running on borrowed time for two
 > decades. Export your entries even if you never run this server.
 
+**Have notes somewhere else?** If you kept journaling in Markdown (e.g. a Bear
+export — a folder of `.md` files), `./import-markdown --dir path/to/notes`
+posts each file as an entry, using the file's **creation date** as the post
+date. Private and backdated by default (`--security public` to change);
+`--dry-run` previews first. Notes exported as attachment folders post their
+text (binary attachments aren't embedded); text-less image/audio notes are
+skipped and listed.
+
 ---
 
 ## Daily use
@@ -157,7 +165,7 @@ Works for any classic LiveJournal-codebase site, not just DeadJournal:
 | Write an entry | **Update Journal** (`/update.bml`) — moods, music, the works |
 | Read my journal | `/users/YOURNAME/` |
 | Edit old entries | `/editjournal.bml` |
-| Change the look | `/customize/` (S1 styles, like 2003) |
+| Change the look | `/customize/` (S2 layouts like Generator) or `/styles/` (classic S1) |
 | Add another person | send them to `/create.bml` ("Join the Undead") |
 | Back up everything | `./backup.sh` → drops a dated file in `backups/` |
 | Restore a backup | `./restore.sh backups/journal-....sql.gz` |
